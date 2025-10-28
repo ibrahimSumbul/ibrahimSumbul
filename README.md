@@ -1,39 +1,62 @@
+# 👋 Hi, I'm Ibrahim Sumbul
 
-# Hi, I'm ibrahim sumbul ! 👋
+I'm a **Full-Stack Software Engineer** and Computer Engineer passionate about building **scalable web and mobile applications** that combine technology, usability, and creativity.  
+I design, develop, and deploy complete software ecosystems — from backend APIs to mobile apps — with a strong focus on **clean architecture**, **real-time systems**, and **AI-driven automation**.
 
-I'm a Computer Engineer passionate about software development. I specialize in web and mobile application development, financial software, artificial intelligence, data analysis, and automation. My focus is on writing clean code, building scalable solutions, and designing user-centric experiences.
+Originally started with embedded systems and robotics, which strengthened my foundation in **systems-level thinking** and hardware-software integration — today I apply the same precision to modern web architectures.
 
-## 🚀 My Skills
+What sets me apart is my ability to **move seamlessly between technologies** — breaking barriers between programming languages and adapting quickly to new tools and frameworks.
 
-**Languages:** Python, JavaScript, TypeScript,C, C++, C#
-**Web Technologies:** Next.js, React, Node.js, HTML, CSS
-**Mobile:** React Native, Expo
-**Data Science & AI:** Data Analysis, NLP (Natural Language Processing), Fine-tuning, Machine Learning
-**Financial Software:** MetaTrader 5 (MQL5), Pine Script (TradingView)
-**Databases:** [Firabase, Supabase, PostgreSQL, MongoDB, MySQL]
-**Other:** Web Scraping, RESTful APIs, Git, Docker, AWS, Azure, e.g..
+---
+
+## 🚀 Core Skills
+
+**Languages:** TypeScript, JavaScript, Python, C, C++, C#  
+**Backend:** Node.js (NestJS / Express), Supabase, REST APIs, WebSocket  
+**Frontend:** Next.js, React, SCSS, Responsive Design  
+**Mobile:** React Native, Expo, Cross-Platform Architecture  
+**Databases:** PostgreSQL, MySQL, MongoDB, Firebase  
+**AI & Data:** NLP, Fine-tuning, Data Analysis, Prompt Engineering  
+**DevOps:** Docker, CI/CD (GitHub Actions), AWS, Linux  
+**Finance Tools:** MQL5, Pine Script (TradingView)
+
+---
 
 ## 💡 Featured Projects
 
-*   **Financial Automation and Analysis Systems:** Profit-driven algorithmic trading software (MetaTrader5) and financial indicator development (TradingView Pine Script).
-*   **Web and Mobile Applications:**
-    *   **Fitness/Coach Mobile Application:** A mobile coaching application developed with Expo and React Native, capable of integrating and syncing with Instagram.
-    *   **Runner Log Management System:** A website for runners to track their logs and performance.
-    *   **Environmental Awareness Website:** An environmental website that calculates recycling and carbon footprint, and displays authorized institutions.
-    *   **Telecommunication Sector Blog Website (SeguTeknoloji):** A blog website for a subcontractor company operating in the telecommunication sector.
-    *   **Web-Based Personal AI Assistant (VFF - Virtual Friend Forever):** An MVP (Minimum Viable Product) AI assistant developed for the UK market.
-    *   **Streamer Reward Platform (Lootore.com):** A web-based platform that rewards viewers for watching streams on Twitch and Kick platforms.
-*   **Data Science and Artificial Intelligence:** Projects developed in data analysis, NLP (Natural Language Processing), and fine-tuning.
-*   **Web Scraping and Automation:** Data collection and business process automation solutions developed through various web scraping projects for different sectors.
+### 🟢 [FlortApp](https://github.com/ibrahimSumbul/flortapp)
+A **real-time social networking & messaging platform** built with Node.js, PostgreSQL, and React Native.  
+- End-to-end architecture: backend API, admin dashboard, and mobile app  
+- Real-time chat and subscription logic  
+- Secure JWT authentication, optimized queries, and RLS policies  
 
-## 🌱 What I'm Currently Working On
+### 🟢 [Billing API Demo](https://github.com/ibrahimSumbul/billing-api-demo)
+A **subscription and payments API** designed for SaaS platforms.  
+- Node.js + PostgreSQL + Docker  
+- Clean REST architecture and query optimization  
+- Demonstrates scalable billing workflows  
 
-*   **Social Networking/Matching Application:** A cross-platform mobile application developed with Expo and React Native. Its admin panel is deployed on Vercel using Next.js.
-  
-## 📬 Get in Touch
-
-*   **LinkedIn:** [Your LinkedIn Profile Link]
-*   **Email:** [Your Email Address]
-*   **Personal Website:** [Your Personal Website Link (if any)]
+### 🟢 [AI-Powered Vehicle System Automation (in progress)](https://github.com/ibrahimSumbul/ai-vehicle-automation)
+An **AI-driven automotive assistant** that automates diagnostic and reporting workflows.  
+- Integrates GPT-based reasoning with IoT data  
+- Automatic vehicle fault detection and data logging  
 
 ---
+
+## 🌱 Currently Working On
+
+- Expanding **AI Vehicle System** with multi-agent orchestration and data streaming  
+- Building **cross-platform demo apps** for full-stack hiring visibility  
+- Exploring **Kafka** and **event-driven systems** for next-gen backend scalability  
+
+---
+
+## 📬 Get in Touch
+
+📧 **Email:** ibrahimsumbulll@gmail.com  
+💼 **LinkedIn:** [linkedin.com/in/ibrahim-sümbül-838800300](https://www.linkedin.com/in/ibrahim-s%C3%BCmb%C3%BCl-838800300)  
+💻 **GitHub:** [github.com/ibrahimSumbul](https://github.com/ibrahimSumbul)
+
+---
+
+⭐ *"From backend architecture to mobile experiences — building across stacks, languages, and boundaries."*
