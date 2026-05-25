@@ -16,6 +16,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) tarzı.
 - `docs/09-notifications.md`
 - `docs/10-why-frigate.md` — saf Haiku neden yapılmaz teknik gerekçeler
 - `docs/11-tech-decisions.md` — teknoloji seçim kararları (Frigate, Python, Haiku, Postgres, n8n vs alternatifler)
+- **MIT License** — portfolio için açık kaynak
+- README portfolio-friendly açılış (badges + lead paragraph + cross-link to tech decisions)
 
 ### Changed
 - Donanım bütçesi sabit: **maksimum 1× Coral USB ($60)**

@@ -1,92 +1,116 @@
 <h1 align="center">👋 Hi, I'm Ibrahim Sumbul</h1>
 
 <p align="center">
-  <b>Full-Stack Software Engineer</b> | Building scalable web & mobile applications with clean architecture, real-time systems, and AI-driven automation.
+  <b>Full-Stack Engineer · AI Architecture · Systems Thinking</b><br>
+  Building hybrid AI systems where <b>local inference meets cloud LLMs</b> — practical, cost-aware, and production-grade.
+</p>
+
+<p align="center">
+  <a href="mailto:ibrahimsumbulll@gmail.com"><img src="https://img.shields.io/badge/Email-D14836?style=flat&logo=gmail&logoColor=white" /></a>
+  <a href="https://www.linkedin.com/in/ibrahim-s%C3%BCmb%C3%BCl-838800300"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" /></a>
+  <a href="https://github.com/ibrahimSumbul"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" /></a>
 </p>
 
 ---
 
-### 🧭 About Me
+### 🧭 About
 
-I'm a Computer Engineer and Full-Stack Developer passionate about building **SaaS, Fintech, and AI-powered solutions**.  
-I develop complete ecosystems — from backend APIs to mobile apps — and adapt quickly across stacks and programming languages.
+Computer Engineer focused on **AI-powered systems** — from edge inference on cameras to multi-agent orchestration over enterprise data. I design and build complete ecosystems: backend APIs, mobile apps, AI integrations, and the architecture that ties them together.
 
-Originally started with **embedded systems and robotics**, which strengthened my foundation in systems-level thinking and hardware-software integration.  
-Now, I apply the same precision and engineering mindset to modern software architectures.
+My background blends **embedded systems & robotics** with modern web/mobile and ML. That combination shapes how I think: hardware constraints first, software abstractions second, never the other way around.
+
+Currently exploring how **hybrid AI** (local detection + cloud LLM semantics) outperforms pure-cloud approaches on cost, latency, and reliability for real-world deployments.
 
 ---
 
 ### 🧠 Tech Stack
 
-#### 🚀 Languages & Frameworks
+#### Languages & Frameworks
 <p align="left">
-  <img src="https://skillicons.dev/icons?i=typescript,javascript,python,cpp,cs,nodejs,nestjs,react,nextjs,html,css,tailwind" />
+  <img src="https://skillicons.dev/icons?i=python,typescript,javascript,cpp,cs,nodejs,nestjs,fastapi,react,nextjs,tailwind" />
 </p>
 
-#### 🗄️ Databases & Cloud
+#### Data, Cloud & Infra
 <p align="left">
-  <img src="https://skillicons.dev/icons?i=postgresql,mysql,mongodb,supabase,prisma,vercel,aws,azure,docker,kubernetes,git,githubactions,linux" />
+  <img src="https://skillicons.dev/icons?i=postgresql,mysql,supabase,prisma,docker,kubernetes,aws,azure,vercel,linux,githubactions,git" />
 </p>
 
-#### 🤖 AI & Data Science
+#### AI / ML
 <p align="left">
-  <img src="https://skillicons.dev/icons?i=python,tensorflow,pytorch" />
+  <img src="https://skillicons.dev/icons?i=python,pytorch,tensorflow" />
   <br>
-  <b>Areas:</b> NLP, Fine-tuning, Data Analysis, Prompt Engineering, Automation, Kafka, Event-driven Systems
+  <b>Focus areas:</b> Hybrid AI architecture · Multi-agent orchestration · Vision LLMs (Claude, Gemini, GPT-4o) · Prompt engineering & caching · Local inference (Frigate, YOLO, Coral TPU) · Event-driven systems · KVKK / GDPR-aware design
 </p>
 
 ---
 
 ### 💡 Featured Projects
 
-#### 🟢 [FlortApp](https://github.com/ibrahimSumbul/flortapp)
-A **real-time social networking & messaging platform** built with Node.js, PostgreSQL, and React Native.  
-- End-to-end architecture: backend API, admin dashboard, and mobile app  
-- Real-time chat and subscription logic  
-- Secure JWT authentication, optimized queries, and RLS policies  
-<p align="center">
-  <img src="https://placehold.co/600x400?text=FlortApp+Demo" width="500" alt="FlortApp Demo" />
-</p>
+#### 🎥 [AI NVR — Hybrid Camera Analytics](https://github.com/ibrahimSumbul/ai_nvr)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/LICENSE)
+[![Stack](https://img.shields.io/badge/Python%20·%20Frigate%20·%20Postgres%20·%20Claude-534AB7)](https://github.com/ibrahimSumbul/ai_nvr)
+
+A production-grade reference architecture for adding AI on top of an **existing 100-camera Dahua NVR** without disturbing the original recording system. Combines **local detection** (Frigate + Coral USB) with **cloud semantic analysis** (Claude Haiku) for color recognition and anomaly verification.
+
+- First-entry alarm with zone state machine — no spam when zone is already occupied
+- Door traversal logging with **second-precision** entry/exit timestamps + email link to event clip
+- Truck cab + trailer color recording (no plate reading, KVKK-friendly)
+- Original Dahua DSS/SmartPSS panel sees events as "External Alarm"
+- **Fixed budgets**: $10/mo (PoC) → $25/mo (production, ~25 AI cameras)
+- 11 architecture documents — from tech decision records to max-capacity bottleneck analysis
+
+> **Why interesting:** real cost math (pure cloud LLM ≈ $2.5M/mo vs hybrid ≈ $25/mo), explicit trade-off tables, NVR-load-aware design.
 
 ---
+
+#### 🧩 Domain-Based AI Orchestration Architecture *(architecture case study — private)*
+![Status](https://img.shields.io/badge/Status-Architecture%20Design-orange)
+![Visibility](https://img.shields.io/badge/Repository-Private-lightgrey)
+
+An independent architectural case study exploring how a mid-size enterprise can **unify access to multiple internal systems** (ERP, fleet management platform, QMS, asset registry, document stores) behind a **single AI orchestration layer**.
+
+Four-layer mimari:
+- **Channels** — chat (WhatsApp / Teams / web), structured dashboards, proactive notifications
+- **Orchestration** — authz/policy, audit logging, conversation memory, domain intent routing
+- **Domains** — eight specialized agent clusters (HR/SOP, procurement, demand & stock, logistics, quality, sales, decision support, finance)
+- **Federated data** — sources stay in place, queried via APIs on demand; no central warehouse
+
+Design priorities: **KVKK / GDPR-grade audit trail**, prompt-injection defense, intent routing with tool whitelisting, multi-channel context continuity.
+
+> Frames AI not as "chatbot" but as **data strategy** — the orchestration layer becomes the forcing function that disciplines underlying data sources.
+
+> *Repository private under development. Architecture deck available on request.*
+
+---
+
+#### 🚗 [AI-Powered Vehicle System Automation](https://github.com/ibrahimSumbul/ai-vehicle-automation)
+AI-driven automotive assistant automating diagnostic and reporting workflows — GPT-based reasoning over IoT data, vehicle fault detection, automatic logging.
+
+#### 🟢 [FlortApp](https://github.com/ibrahimSumbul/flortapp)
+Real-time social networking & messaging platform — Node.js + PostgreSQL + React Native. End-to-end (backend API + admin dashboard + mobile), real-time chat, JWT auth, RLS policies.
 
 #### 🟢 [Billing API Demo](https://github.com/ibrahimSumbul/billing-api-demo)
-A **subscription and payments API** designed for SaaS platforms.  
-- Node.js + PostgreSQL + Docker  
-- Clean REST architecture and query optimization  
-- Demonstrates scalable billing workflows  
-<p align="center">
-  <img src="https://placehold.co/600x400?text=Billing+API+Demo" width="500" alt="Billing API Demo" />
-</p>
-
----
-
-#### 🟢 [AI-Powered Vehicle System Automation (in progress)](https://github.com/ibrahimSumbul/ai-vehicle-automation)
-An **AI-driven automotive assistant** automating diagnostic and reporting workflows.  
-- Integrates GPT-based reasoning with IoT data  
-- Automatic vehicle fault detection and data logging  
-<p align="center">
-  <img src="https://placehold.co/600x400?text=AI+Vehicle+System+Demo" width="500" alt="AI Vehicle Demo" />
-</p>
+SaaS-grade subscription & payments API — Node.js + PostgreSQL + Docker, clean REST architecture, query optimization.
 
 ---
 
 ### 🌱 Currently Working On
 
-- Expanding **AI Vehicle System** with multi-agent orchestration and real-time streaming  
-- Building **cross-platform demo apps** to highlight full-stack adaptability  
-- Exploring **Kafka**, **Prisma**, and **Supabase Edge Functions** for next-gen backend scalability  
+- Building **AI NVR** scaffold (Milestone 1: Docker stack, bridge service, Postgres schema) — code phase begins after documentation freeze.
+- Architectural deep-dive on the **AI Orchestration** case study — moving from concept deck to detailed component design (security, audit schemas, intent routing).
+- Exploring **prompt caching + small-model routing** to keep multi-agent systems under tight monthly LLM budgets.
 
 ---
 
 ### 📬 Get in Touch
 
-📧 **Email:** [ibrahimsumbulll@gmail.com](mailto:ibrahimsumbulll@gmail.com)  
-💼 **LinkedIn:** [linkedin.com/in/ibrahim-sümbül-838800300](https://www.linkedin.com/in/ibrahim-s%C3%BCmb%C3%BCl-838800300)  
-💻 **GitHub:** [github.com/ibrahimSumbul](https://github.com/ibrahimSumbul)
+📧 **Email** — [ibrahimsumbulll@gmail.com](mailto:ibrahimsumbulll@gmail.com)
+💼 **LinkedIn** — [linkedin.com/in/ibrahim-sümbül](https://www.linkedin.com/in/ibrahim-s%C3%BCmb%C3%BCl-838800300)
+💻 **GitHub** — [github.com/ibrahimSumbul](https://github.com/ibrahimSumbul)
 
 ---
 
 <p align="center">
-  ⭐ <i>"From backend architecture to mobile experiences — building across stacks, languages, and boundaries."</i> ⭐
+  <i>"Hardware constraints first, software abstractions second."</i><br>
+  <sub>From embedded systems to multi-agent AI — building across stacks, languages, and boundaries.</sub>
 </p>

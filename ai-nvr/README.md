@@ -1,6 +1,14 @@
-# AI NVR — Dahua + Frigate + Claude Haiku Hibrit Kamera Analiz Sistemi
+# AI NVR — Dahua + Frigate + Claude Haiku Hybrid Camera Analytics
 
-100 IP kameralı bir Dahua NVR kurulumuna, **orijinal kayıt sistemini bozmadan**, ilk-giriş tetikleyici, kapı geçişi log + e-posta bildirimi, ve tır/dorse renk kayıt yetenekleri ekleyen hafif AI katmanı.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Status: Documentation Phase](https://img.shields.io/badge/Status-Documentation-orange.svg)](ROADMAP.md)
+[![Stack: Python · Frigate · Postgres · Claude Haiku](https://img.shields.io/badge/Stack-Python%20·%20Frigate%20·%20Postgres%20·%20Claude-534AB7.svg)](docs/11-tech-decisions.md)
+
+A lightweight hybrid AI layer that adds zone authorization, first-entry alarms, second-precision door traversal logging, and truck/trailer color recording on top of an existing Dahua NVR — **without disturbing the original recording system**.
+
+Designed for a typical 100-IP-camera industrial deployment where the NVR is at ~50% load. Local detection runs on Frigate (CPU → Coral USB upgrade), semantic analysis (color, anomaly description) runs on Claude Haiku, and events flow back into the original DSS/SmartPSS panel as external alarms.
+
+> Portfolio project — open-source reference architecture and documentation for hybrid local + cloud AI on existing CCTV infrastructure.
 
 ## Durum
 
@@ -116,8 +124,8 @@ Detay için → [`docs/01-architecture.md`](docs/01-architecture.md).
 
 ## Lisans
 
-Özel proje — iç kullanım. Lisans belirlenmedi.
+[MIT](LICENSE) — özgür kullanım, atıf yeterli.
 
 ## İletişim
 
-Sahibi: İbrahim Sümbül (ibrahimsumbulll@gmail.com)
+İbrahim Sümbül · [ibrahimsumbulll@gmail.com](mailto:ibrahimsumbulll@gmail.com) · [GitHub](https://github.com/ibrahimSumbul)
