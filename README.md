@@ -46,6 +46,30 @@ Currently exploring how **hybrid AI** (local detection + cloud LLM semantics) ou
 
 ### 💡 Featured Projects
 
+#### 🧩 Domain-Based AI Orchestration Platform *(in active development — private)*
+![Status](https://img.shields.io/badge/Status-Active%20Development-blue)
+![Stack](https://img.shields.io/badge/Next.js%20·%20TypeScript%20·%20Anthropic%20·%20Vercel%20AI-000000)
+![Repo](https://img.shields.io/badge/Repository-Private-lightgrey)
+
+Multi-agent orchestration layer that gives users a single natural-language surface (chat, dashboards, proactive notifications) over many internal systems (ERP, fleet platform, QMS, asset registry, document stores). Designed for **mid-size enterprises** where data exists but isn't usable.
+
+**Architecture highlights:**
+- Four-layer separation: Channels · Orchestration · Domain agents · Federated data sources (no central warehouse, query-time API access)
+- **Capability-based model routing** — domain reasoning on Claude Sonnet, horizontal/data tasks on Haiku, with fallback chains
+- Multi-channel context continuity (a chat thread started in Teams continues in the web dashboard)
+- KVKK / GDPR-grade audit trail, prompt-injection defense, tool whitelisting per domain
+
+**Engineering rigor — every agent ships with a 12-axis checklist:**
+prompt engineering & versioning · Anthropic prompt caching · structured outputs (Zod) · typed error taxonomy · streaming with progressive tool-call UI · OpenTelemetry observability · per-user / per-agent / per-tool rate limits (Upstash Redis) · PII detect+mask pipeline (TC kimlik, phone — deterministic + Haiku) · golden-query evals (Vitest + Promptfoo) · semver agent versioning · per-call cost log + Vercel AI Gateway budget caps · LLM hallucination guard via citation cross-check.
+
+**Stack:** Next.js · TypeScript · Anthropic SDK · Vercel AI SDK + AI Gateway · Supabase (Auth + Postgres) · Upstash Redis · Sentry · Promptfoo · Vitest
+
+> Framed not as "another chatbot" but as **a data strategy project** — orchestration becomes the forcing function that disciplines underlying data sources and turns latent data into used data.
+
+> *Repository private during development. Architecture deck and engineering deep-dive available on request.*
+
+---
+
 #### 🎥 [AI NVR — Hybrid Camera Analytics](https://github.com/ibrahimSumbul/ai_nvr)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/LICENSE)
 [![Stack](https://img.shields.io/badge/Python%20·%20Frigate%20·%20Postgres%20·%20Claude-534AB7)](https://github.com/ibrahimSumbul/ai_nvr)
@@ -63,42 +87,31 @@ A production-grade reference architecture for adding AI on top of an **existing 
 
 ---
 
-#### 🧩 Domain-Based AI Orchestration Architecture *(architecture case study — private)*
-![Status](https://img.shields.io/badge/Status-Architecture%20Design-orange)
-![Visibility](https://img.shields.io/badge/Repository-Private-lightgrey)
+#### 🏋️ AI Fitness Coaching App *(side project)*
+![Status](https://img.shields.io/badge/Status-Shipped-success)
+![Stack](https://img.shields.io/badge/React%20Native%20·%20Instagram%20OAuth%20·%20LLM-FF6B6B)
 
-An independent architectural case study exploring how a mid-size enterprise can **unify access to multiple internal systems** (ERP, fleet management platform, QMS, asset registry, document stores) behind a **single AI orchestration layer**.
+Mobile fitness app that pairs a **trainer (hoca)** with their athletes and lets an LLM act as the explainer-in-the-middle. Users sign in with **Instagram OAuth**, and an AI layer analyzes their **diet plan** and **training program** — clarifying *why* the coach prescribed what they did, surfacing inconsistencies, and translating jargon for non-expert users.
 
-Four-layer mimari:
-- **Channels** — chat (WhatsApp / Teams / web), structured dashboards, proactive notifications
-- **Orchestration** — authz/policy, audit logging, conversation memory, domain intent routing
-- **Domains** — eight specialized agent clusters (HR/SOP, procurement, demand & stock, logistics, quality, sales, decision support, finance)
-- **Federated data** — sources stay in place, queried via APIs on demand; no central warehouse
+- **Two-sided assistance** — helps the coach build/explain programs, helps the athlete actually understand them
+- AI-generated explanations and progress summaries from training logs
+- Personalized weekly check-ins triggered by usage patterns
+- LLM-translated nutrition and movement vocabulary
 
-Design priorities: **KVKK / GDPR-grade audit trail**, prompt-injection defense, intent routing with tool whitelisting, multi-channel context continuity.
-
-> Frames AI not as "chatbot" but as **data strategy** — the orchestration layer becomes the forcing function that disciplines underlying data sources.
-
-> *Repository private under development. Architecture deck available on request.*
+> Built end-to-end as a side project — interesting design problem: an AI that **augments a human expert** instead of replacing them.
 
 ---
 
 #### 🚗 [AI-Powered Vehicle System Automation](https://github.com/ibrahimSumbul/ai-vehicle-automation)
 AI-driven automotive assistant automating diagnostic and reporting workflows — GPT-based reasoning over IoT data, vehicle fault detection, automatic logging.
 
-#### 🟢 [FlortApp](https://github.com/ibrahimSumbul/flortapp)
-Real-time social networking & messaging platform — Node.js + PostgreSQL + React Native. End-to-end (backend API + admin dashboard + mobile), real-time chat, JWT auth, RLS policies.
-
-#### 🟢 [Billing API Demo](https://github.com/ibrahimSumbul/billing-api-demo)
-SaaS-grade subscription & payments API — Node.js + PostgreSQL + Docker, clean REST architecture, query optimization.
-
 ---
 
 ### 🌱 Currently Working On
 
+- Lead engineer on the **AI Orchestration Platform** above — moving from architecture deck to multi-agent runtime: prompt versioning, eval pipelines (Promptfoo + Vitest golden queries), Anthropic prompt caching strategy, KVKK PII pipeline, per-agent cost attribution.
 - Building **AI NVR** scaffold (Milestone 1: Docker stack, bridge service, Postgres schema) — code phase begins after documentation freeze.
-- Architectural deep-dive on the **AI Orchestration** case study — moving from concept deck to detailed component design (security, audit schemas, intent routing).
-- Exploring **prompt caching + small-model routing** to keep multi-agent systems under tight monthly LLM budgets.
+- Exploring **capability-based model routing** (Sonnet for reasoning, Haiku for retrieval/data tasks) to keep multi-agent systems under tight monthly LLM budgets.
 
 ---
 
