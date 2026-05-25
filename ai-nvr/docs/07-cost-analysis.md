@@ -1,20 +1,17 @@
 # 07 — Maliyet Analizi
 
-## Özet
+## Özet — Sabit Bütçeler
 
-Donanım bütçesi sabitlendi: **maksimum 1 adet Coral USB ($60)**. Coral kapasitesini aşan kameralar Haiku ile desteklenir.
+| Faz | Donanım (tek seferlik) | Haiku bütçe (aylık) | Toplam aylık |
+|---|---|---|---|
+| **PoC** | $0 (mevcut 8 GB sunucu) | **$10** | ~$11 (elektrik dahil) |
+| **Production** | $60 (1× Coral USB) | **$25** | ~$28 (elektrik dahil) |
 
-| Kalem | PoC | Production (15 Coral + 10 Haiku) |
-|---|---|---|
-| **Donanım (tek seferlik)** | $0 (mevcut sunucu) | +$60 (1× Coral USB) |
-| **Aylık LLM (Haiku)** | < $1 | ~$15–20 |
-| **Aylık elektrik** | ~$1 | ~$3 (CPU + Coral) |
-| **Aylık SMTP** | $0 (Gmail) | $0 |
-| **Aylık toplam** | **~$1–2** | **~$18–25** |
-| **Yıllık toplam (1. yıl)** | ~$24 | ~$240 + $60 = $300 |
-| **Yıllık toplam (2. yıl)** | ~$24 | ~$240 |
+Bu sayılar **hedef tavanlar**. Bridge'de bütçe guard:
+- PoC: $8'de uyarı, $10'da Haiku disable
+- Production: $20'de uyarı, $25'te Haiku disable
 
-> Kapsam genişlerse (kamera ekleyince) maliyet doğrusal Haiku artar — donanım yatırımı yok.
+NVR'a yük binmez (direct kamera bağlantısı zorunlu). Sunucu elektrik ek yük marjinal (~$1–3/ay).
 
 ## Kıyaslama: Üç Yaklaşım
 
@@ -22,9 +19,10 @@ Donanım bütçesi sabitlendi: **maksimum 1 adet Coral USB ($60)**. Coral kapasi
 |---|---|---|---|---|
 | Saf bulut LLM (1 fps, 100 kamera) | $0 | $2.592.000 | $31 M | $93 M |
 | Frigate + GPU (saf lokal) | $1.500 | ~$40 | $1.980 | $2.940 |
-| **Bu proje: Hibrit (Coral + Haiku)** | **$60** | **~$18** | **~$300** | **~$540** |
+| **Bu proje — PoC** | **$0** | **~$10** | **~$120** | – |
+| **Bu proje — Production** | **$60** | **~$25** | **~$360** | **~$660** |
 
-> Bu proje en pahalı yaklaşımın **1/150.000**'i, en ucuz lokal alternatifin **1/5**'i.
+> Bu proje en pahalı yaklaşımın **1/100.000**'i, en ucuz lokal alternatifin **1/5**'i.
 
 ## LLM Maliyeti Detay
 
@@ -38,47 +36,57 @@ Donanım bütçesi sabitlendi: **maksimum 1 adet Coral USB ($60)**. Coral kapasi
 | Output JSON | 200 | 4,00 | $0,000800 |
 | **Per çağrı toplam** | | | **~$0,0012** |
 
-### Aylık (üretim senaryo — 15 Coral + 10 Haiku-only kamera)
+### PoC Bütçe Tahsisi ($10/ay)
 
-**Grup A+B (15 kamera Coral'da)** — Haiku sadece zenginleştirme için:
+Pilot 2–3 kamera. Sadece doğrulama amaçlı.
+
+| Olay tipi | Adet/gün | Çağrı/ay | Aylık $ |
+|---|---|---|---|
+| Tır+dorse renk (pilot kamyon, 5/gün) | 5 | 150 | $0,18 |
+| Pilot kapı geçişi enrichment | 50 | 1.500 | $1,80 |
+| Anomali / debug | – | 200 | $0,24 |
+| Pilot Grup C motion (1 kamera test) | 30 | 900 | $1,08 |
+| Manuel test sırasında | – | 500 | $0,60 |
+| **Alt toplam** | | **~3.250** | **~$3,90** |
+| **Bütçe headroom** | | | **$6,10** |
+
+PoC bütçesi rahat sığar; testler ve kalibrasyon sırasında ekstra çağrılara da yer var.
+
+### Production Bütçe Tahsisi ($25/ay)
+
+**Grup A+B (15 kamera Coral'da)** — Haiku sadece zenginleştirme:
 
 | Olay tipi | Adet/gün | Çağrı/ay | Aylık $ |
 |---|---|---|---|
 | Tır+dorse renk | 20 | 600 | $0,72 |
 | Anomali doğrulama | 10 | 300 | $0,36 |
 | Yetkisiz alan (M8+) | 5 | 150 | $0,18 |
-| Kapı geçişi enrichment (ops.) | 150 | 4.500 | $5,40 |
-| **Alt toplam** | | **5.550** | **~$6,66** |
+| Kapı geçişi enrichment | 150 | 4.500 | $5,40 |
+| **Alt toplam (A+B)** | | **5.550** | **~$6,66** |
 
-**Grup C (10 kamera Coral'a sığmadı, motion-triggered Haiku)** — her motion event Haiku'ya gider:
+**Kalan bütçe**: $25 − $6,66 = **$18,34** — bu Grup C'ye gider.
 
-| Parametre | Değer |
-|---|---|
-| Motion event / kamera / gün | ~30 |
-| Toplam motion events / ay | 10 × 30 × 30 = 9.000 |
-| Haiku call başına | $0,0012 |
-| **Alt toplam** | **~$10,80** |
+**Grup C (motion-triggered Haiku)** — kamera sayısı bütçeyle kalibre edilir:
 
-| Test/debug | – | 100 | $0,12 |
-| **Genel Toplam** | | **~14.650** | **~$17,60/ay** |
+| Motion/kamera/gün (varsayım) | Kamera × motion × 30 = çağrı | Aylık $ | Kamera sayısı |
+|---|---|---|---|
+| 15 (sakin) | 10 × 15 × 30 = 4.500 | $5,40 | **istediğin kadar** |
+| 30 (orta) | 10 × 30 × 30 = 9.000 | $10,80 | **10 rahat** |
+| 30 (orta) | 12 × 30 × 30 = 10.800 | $12,96 | **12 sınırda** |
+| 50 (yoğun) | 10 × 50 × 30 = 15.000 | $18,00 | **10'dur** |
 
-Güvenli pay: bütçe **$30/ay** olarak konur (.env), alarm $24'te.
+> **Hedef**: 10–12 Grup C kamerası, $25 bütçeye sığar. Motion yoğunluğu ölçüldükçe kalibre edilir.
 
-### Grup C maliyet duyarlılığı
+| **Genel Toplam (Production)** | | **~15.000–16.500** | **~$18–25** |
 
-Motion event sayısı en büyük değişken. Karşılaştırma:
+Güvenli pay: bütçe **$25/ay** sınır (.env'de `LLM_MONTHLY_BUDGET_USD=25`), alarm **$20**'de.
 
-| Motion/kamera/gün | Aylık çağrı | Aylık $ |
-|---|---|---|
-| 15 (sakin alan) | 4.500 | $5,40 |
-| 30 (orta) | 9.000 | $10,80 |
-| 50 (yoğun) | 15.000 | $18,00 |
-| 100 (problemli) | 30.000 | $36,00 |
+### Grup C Otomatik Kalibrasyon
 
-Eğer Grup C kameraları çok motion üretiyorsa:
-- Motion threshold'unu yükselt (küçük gürültüleri yoksay)
-- Mesai dışı sadece aktif et
-- O kamerayı Grup D'ye düşür (NVR-only)
+Bridge her gün motion-event/kamera istatistiği üretir. Eğer:
+- Bir kamera × motion/gün >50 → o kamera için Haiku tetikleme **active_hours**'a sıkılaştırılır (örn. mesai dışı)
+- Motion threshold +%20 yükseltilir (gürültüden geliyor olabilir)
+- 2 hafta sonra hâlâ yüksekse → Grup D'ye düşürme önerisi log atılır
 
 ## Donanım Maliyeti
 

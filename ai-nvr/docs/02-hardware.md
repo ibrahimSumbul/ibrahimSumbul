@@ -45,21 +45,32 @@ Tek Coral USB, Edge TPU üzerinde **~100 inference/saniye** yapar. Kamera başı
 
 > **Karar**: 5 fps'te **15 kamera Coral üzerinde**, geri kalanlar motion-triggered Haiku ile çalışır.
 
-### 100 Kamera için Tahsis Planı
+### İki Fazlı Plan
+
+**Faz 1 — PoC (8 GB RAM, Coral yok, $10/ay Haiku bütçesi)**
+
+| Grup | Kamera | Mekanizma |
+|---|---|---|
+| A: Pilot oda | 1–2 | Frigate CPU + state machine |
+| B: Pilot kapı | 1 | Frigate CPU + door traversal |
+| Diğer 97 | – | Sadece NVR kaydı, AI yok |
+
+CPU-only Frigate ~3 kamerayı düşük FPS'te kaldırır. Pilot için yeterli.
+
+**Faz 2 — Production (Coral USB + $25/ay Haiku bütçesi)**
 
 | Grup | Kamera | Mekanizma | Maliyet |
 |---|---|---|---|
 | **A**: Aktif izlenen alanlar (oda) | 10 | Frigate + Coral (state machine) | TPU |
 | **B**: Kapılar (alarm + giriş/çıkış log) | 5 | Frigate + Coral (door traversal) | TPU |
-| **C**: Düşük öncelik (motion → Haiku) | 10 | ffmpeg motion + Haiku snapshot | LLM |
-| **D**: Sadece NVR kaydı | 75 | NVR kayıt, AI yok | $0 |
+| **C**: Düşük öncelik (motion → Haiku) | 10–12 | ffmpeg motion + Haiku snapshot | LLM |
+| **D**: Sadece NVR kaydı | 73–75 | NVR kayıt, AI yok | $0 |
 | **Toplam** | **100** | | |
 
 Grup A+B: **15 kamera Coral'da**, kapasiteye sığar.
-Grup C: Coral kullanmaz, hareket halinde Haiku çağrısı yapar.
-Grup D: Hiç AI işlemi yapılmaz, sadece Dahua NVR kaydı.
+Grup C boyutu **$25 Haiku bütçesine** göre kalibre edilir (motion sıklığına bağlı, 10–12 arası). Bkz. [`07-cost-analysis.md`](07-cost-analysis.md).
 
-> Grup C'nin sayısı bütçeyle dengelenir. Bkz. [`07-cost-analysis.md`](07-cost-analysis.md).
+> Tüm kameralar AI sunucudan **direct** erişilebilir olmak zorunda. NVR'a ek yük binmez. Bkz. [`05-dahua-integration.md`](05-dahua-integration.md).
 
 ### Coral USB'nin sağladığı
 

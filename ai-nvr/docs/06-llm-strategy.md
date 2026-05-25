@@ -139,19 +139,24 @@ JSON döndür: {
 | Yetkisiz alan (M8+) | 150 | $0,18 |
 | **Toplam aylık** | **~1.050** | **~$1,26** |
 
-### Bütçe Guard
+### Bütçe Guard (Sabit)
 
-Bridge'de bütçe alarmı:
+| Faz | Bütçe | Uyarı | Disable |
+|---|---|---|---|
+| PoC | $10/ay | $8 | $10 |
+| Production | $25/ay | $20 | $25 |
+
+Bridge'de:
 
 ```python
-LLM_MONTHLY_BUDGET_USD = 20.0  # .env'den okunur
+LLM_MONTHLY_BUDGET_USD = float(os.environ["LLM_MONTHLY_BUDGET_USD"])  # 10 veya 25
 
 async def check_budget():
     used = await db.sum_llm_cost_this_month()
     if used > LLM_MONTHLY_BUDGET_USD * 0.8:
-        await alert("LLM bütçesinin %80'i tüketildi")
+        await alert(f"LLM bütçesinin %80'i tüketildi: ${used:.2f}/${LLM_MONTHLY_BUDGET_USD}")
     if used > LLM_MONTHLY_BUDGET_USD:
-        await alert("LLM bütçesi aşıldı, çağrılar durduruluyor")
+        await alert(f"LLM bütçesi aşıldı (${used:.2f}), çağrılar durduruluyor")
         return False
     return True
 ```

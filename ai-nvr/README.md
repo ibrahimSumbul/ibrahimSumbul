@@ -27,30 +27,34 @@
 8. **Kamera offline tespit** — herhangi bir kamera 60 sn'den fazla frame göndermezse uyarı/e-posta.
 9. **NVR yük izleme** — NVR CPU %70'i geçince uyarı, %80'de Grup C otomatik devre dışı (kayıt güvenliği önce).
 
-## Hedef Donanım
+## İki Fazlı Plan
 
-- Mevcut Linux Ubuntu 22.04 sunucu, 12 GB RAM (4 GB SnipeIT tarafından kullanılıyor)
-- **PoC**: CPU-only Frigate (~8 GB RAM tampon)
-- **Production**: + **1 adet** Coral USB Accelerator (~$60, Türkiye'den tedarik sonrası)
-- **Donanım tavanı sabittir.** Daha fazla AI kamerası gerekirse maliyet sadece Haiku tarafında artar.
+| Faz | Donanım | Haiku bütçe | Kamera AI kapsamında |
+|---|---|---|---|
+| **PoC** | Mevcut 8 GB RAM sunucu (Coral yok) | **$10/ay** | 2–3 pilot |
+| **Production** | + 1× Coral USB ($60) | **$25/ay** | ~25 (15 Coral + 10 Haiku) |
 
-## 100 Kamera Tahsis Planı
+**NVR'a yük binmez** — tüm bağlantılar doğrudan kameralara (direct IP). NVR sadece kendi kaydını yapmaya devam eder.
+
+### Production Grup Tahsisi (100 kamera için)
 
 | Grup | Kamera | Mekanizma | Aylık $ |
 |---|---|---|---|
-| **A**: Aktif izlenen alanlar (oda) | 10 | Frigate + Coral | (Coral'a dahil) |
-| **B**: Kapılar (alarm + log + e-posta) | 5 | Frigate + Coral | (Coral'a dahil) |
-| **C**: Düşük öncelik | 10 | Motion + Haiku snapshot | ~$11 |
-| **D**: Sadece NVR kaydı | 75 | NVR kayıt, AI yok | $0 |
+| **A**: Aktif izlenen alanlar (oda) | 10 | Frigate + Coral | (Coral içinde) |
+| **B**: Kapılar (alarm + log + e-posta) | 5 | Frigate + Coral | (Coral içinde) |
+| **C**: Düşük öncelik (motion) | 10–12 | Motion + Haiku snapshot | ~$11–13 |
+| **D**: Sadece NVR kaydı | 73–75 | NVR kayıt, AI yok | $0 |
 
-## Hedef Aylık Maliyet
+Grup C boyutu motion yoğunluğuna ve $25 bütçeye göre kalibre edilir.
 
-| Senaryo | LLM çağrı/ay | Aylık |
-|---|---|---|
-| PoC (2–3 kamera) | ~300 | < $1 |
-| Production (Grup A+B+C, 25 kamera) | ~14.500 | **~$18** |
+## Maliyet Özeti
 
-Donanım yatırımı toplam: **$60** (1× Coral USB) + mevcut sunucu.
+| | İlk yatırım | Haiku/ay | Toplam aylık |
+|---|---|---|---|
+| **PoC** | $0 | $10 | ~$11 |
+| **Production** | $60 | $25 | ~$28 |
+
+Daha fazla kamera eklenirse → maliyet sadece Haiku tarafında artar (donanım yok).
 
 ## Hızlı Başlangıç
 

@@ -24,6 +24,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) tarzı.
 - `07-cost-analysis.md`: Grup C maliyet detayı + duyarlılık tablosu
 - **NVR bağlantı stratejisi**: direct vs NVR-channel kıyaslama + yük hesabı
 - **NVR yük izleme**: CPU eşikleri (%70 uyarı, %80 Grup C kapatma)
+- **NVR'a yük ekleme iptal edildi** — sadece direct kamera bağlantısı kullanılır
+- **Sabit bütçeler**: PoC $10/ay Haiku, Production $25/ay Haiku
+- Grup C kamera sayısı motion yoğunluğuna göre $25 bütçeye kalibre edilir (10–12)
 - **NVR orijinal panel davranışı**: External Alarm + DSS Pro Custom Event seçenekleri
 - **Kamera offline alarm**: 60 sn frame yok → uyarı; kritik kameralar için anlık e-posta
 - `10-why-frigate.md` eklendi: saf Haiku neden yapılmaz teknik gerekçeler

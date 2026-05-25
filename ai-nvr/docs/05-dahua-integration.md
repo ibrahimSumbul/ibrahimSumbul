@@ -6,101 +6,89 @@ Bu sistem Dahua NVR/kameralarla **iki yönlü** iletişir:
 
 > NOT: Dahua API'leri model/firmware'e göre değişir. Bu doküman tipik DSS/NVR4xx/5xx serileri içindir. PoC'nin ilk haftası tamamen API uyum testleri için harcanmalıdır.
 
-## Bağlantı Stratejisi: NVR vs Doğrudan Kamera
+## Bağlantı Stratejisi: Sadece Doğrudan Kamera (NVR'a yük binmez)
 
-NVR şu an **%50 yükte çalışıyor**. Üzerine sub-stream pull eklemek riskli olabilir; önce hesaplayalım.
+**Karar (kesin)**: AI sistemi **kameralara doğrudan** bağlanır. NVR üzerinden RTSP çekilmez. Gerekçe: NVR şu an %50 yükte, ek pull yapamayız.
 
-### NVR Yük Tahmini
+### Şart: Direct Erişim
 
-| Etki kalemi | Yaklaşık |
-|---|---|
-| Her RTSP sub-stream pull (640×480 @ 5 fps, H.264) | ~1–3% NVR CPU + ~256 kbps |
-| 15 paralel stream | **+15–45% NVR CPU** |
-| Snapshot endpoint sorgusu (anlık) | ~5% CPU/sorgu |
-| H.265 → H.264 transcode (gerekirse) | +2–5%/stream |
+Her aktif izlenecek kameranın aşağıdaki koşulları sağlaması gerekir:
 
-Mevcut %50 + yeni ~%30 = **~%80**. Tehlikeli sınırın eteğinde; kayıt güvenilirliği etkilenebilir.
+1. **Kamera kendi statik IP'sine sahip olmalı**
+2. **AI sunucusu kamera IP'sine network seviyesinde ulaşabilmeli** (aynı VLAN veya routing açık)
+3. **RTSP portu (554) AI sunucudan erişilebilir olmalı**
+4. **Kamera hesabı/şifresi bilinmeli** (NVR şifresi değil, kamera şifresi)
 
-> **Karar**: Direct kamera bağlantısı **birinci tercih**. NVR üzerinden bağlantı **yedek**. NVR CPU %70'i geçerse derhal direct'e geç.
+> Eğer bir kamera sadece NVR arkasında ise (kendi IP'si erişilemiyor), o kamera AI kapsamına alınamaz. Network yeniden konfigüre edilmeli veya o kamera Grup D'de (sadece NVR kaydı) bırakılmalı.
 
-### Tercih Sıralaması
+### PoC İlk Hafta: Direct Erişim Doğrulaması
 
+Pilot kameraları seçmeden önce her aday kamera için:
+
+```bash
+# 1. Ping testi
+ping -c 3 <kamera_ip>
+
+# 2. RTSP testi
+ffmpeg -rtsp_transport tcp \
+  -i "rtsp://admin:PWD@<kamera_ip>:554/cam/realmonitor?channel=1&subtype=1" \
+  -t 5 -c copy /tmp/test.mp4
+
+# 3. Frame'in geldiğini doğrula
+ls -lh /tmp/test.mp4   # 5 saniyelik kayıt, 100 KB+ olmalı
 ```
-                  ┌───────────────────────────────┐
-                  │  Kamera erişilebilir mi?      │
-                  │  (statik IP, network açık?)   │
-                  └───────┬─────────────┬─────────┘
-                          │ Evet        │ Hayır
-                          ▼             ▼
-              ┌──────────────────┐  ┌──────────────────┐
-              │  DIRECT bağlantı │  │  NVR üzerinden   │
-              │  Kamera IP:554   │  │  channel=N       │
-              │  NVR'a yük: 0    │  │  NVR yük: artar  │
-              └──────────────────┘  └──────────────────┘
-```
 
-İdeal hibrit:
-- Kritik 10 oda kamerası → direct
-- 5 kapı kamerası → direct (yüksek olay frekansı)
-- 10 Grup C kamerası → NVR üzerinden olabilir (motion sadece, az kullanır)
+Bu üçü geçmeyen kamera AI'a alınmaz.
 
-### NVR Yük İzleme (zorunlu)
-
-`bridge/`'de NVR HTTP `/cgi-bin/magicBox.cgi?action=getCpuUsage` periyodik sorgulanır:
-
-| NVR CPU | Aksiyon |
-|---|---|
-| < %60 | Sessiz |
-| 60–70 | Log uyarı |
-| 70–80 | Grafana alarm + Slack/email |
-| > %80 | Otomatik stream sayısını azalt (Grup C devre dışı) |
-
-`llm_usage` ile aynı tabloda `nvr_health` snapshot'ları tutulur.
-
-## RTSP URL'leri
+## RTSP URL'leri (sadece direct)
 
 Standart Dahua RTSP path'i:
 
 ```
-rtsp://<user>:<pass>@<ip>:554/cam/realmonitor?channel=<N>&subtype=<S>
+rtsp://<user>:<pass>@<kamera_ip>:554/cam/realmonitor?channel=1&subtype=<S>
 ```
 
 | Parametre | Anlam |
 |---|---|
-| `channel=N` | Kamera kanalı (1-64). NVR'a doğrudan bağlanırken kanal. Kameraya doğrudan bağlanırken `channel=1`. |
-| `subtype=0` | Main stream (yüksek çözünürlük, kayıt için) |
-| `subtype=1` | Sub stream (düşük çözünürlük, AI detection için) |
+| `channel=1` | Kameraya doğrudan bağlanırken **daima 1** |
+| `subtype=0` | Main stream (yüksek çözünürlük, kayıt için — NVR çekiyor zaten) |
+| `subtype=1` | Sub stream (düşük çözünürlük, AI için — bizim çektiğimiz) |
 
-### Doğrudan kameraya bağlanma
+### Örnek
 
 ```
 rtsp://admin:KAMERA_ŞİFRESİ@192.168.10.21:554/cam/realmonitor?channel=1&subtype=1
 ```
 
-### NVR üzerinden bağlanma (channel ile)
+### Sub-stream ayarı (Dahua kamera Web UI)
 
-```
-rtsp://admin:NVR_ŞİFRESİ@192.168.10.10:554/cam/realmonitor?channel=3&subtype=1
-```
+Setup → Camera → Stream → Sub Stream:
+- Resolution: 640×480 (veya 704×576)
+- FPS: 5–10
+- Codec: H.264 (H.265 Frigate'te yavaş olabilir)
+- Bitrate: 256–512 kbps yeterli
 
-> **NOT (channel adı)**: Dahua'da NVR kanalına isim verebilirsiniz ("DEPO_GIRIS"), ama RTSP URL'i hâlâ **rakam** ister. Channel adını URL'e koyamazsınız. Eşleştirmeyi config'de yapıyoruz:
+### Bridge Konfigürasyonu
 
 ```yaml
 # bridge/config/cameras.yaml
-nvr_channels:
-  depo_giris:                   # bizim ad
-    nvr_channel_id: 3           # Dahua kanal numarası
-    nvr_channel_name: "DEPO_GIRIS"   # Dahua paneldeki ad (sadece referans)
-    connection: nvr             # 'direct' veya 'nvr'
-    ip: 10.0.0.10               # NVR IP veya kamera IP
+cameras:
+  depo_giris:
+    ip: 192.168.10.21
+    nvr_channel_name: "DEPO_GIRIS"     # sadece insan referansı
+    rtsp_user: admin
+    rtsp_password_env: CAM_DEPO_GIRIS_PWD
+    critical: true
   ana_kapi:
-    nvr_channel_id: 12
-    nvr_channel_name: "ANA_KAPI"
-    connection: direct
     ip: 192.168.10.42
+    nvr_channel_name: "ANA_KAPI"
+    rtsp_user: admin
+    rtsp_password_env: CAM_ANA_KAPI_PWD
+    critical: true
+    type: door
 ```
 
-Bridge bu yaml'i okuyup `frigate/config.yml`'i otomatik üretebilir (M1'de).
+Bridge bu yaml'i okuyup `frigate/config.yml`'i otomatik üretir (M1'de).
 
 ### Sub-stream ayarı
 

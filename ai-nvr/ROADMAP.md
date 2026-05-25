@@ -157,3 +157,5 @@ Bu proje **PoC** olarak başlar, ama her milestone **production-ready** kalite h
 | 2026-05-25 | NVR bağlantı: direct öncelikli | NVR %50 yükte, üzerine pull eklemek riskli. Direct yapılamayan yerler NVR channel ile. |
 | 2026-05-25 | NVR CPU > %80 → Grup C otomatik kapanır | Kayıt güvenliği LLM gözlemden önceliklidir. |
 | 2026-05-25 | Saf Haiku reddedildi | Tracking yok, gecikme 1.5 sn, rate limit, maliyet patlar. Frigate ile hibrit zorunlu. |
+| 2026-05-25 | **NVR yük opsiyonu iptal — direct bağlantı zorunlu** | NVR %50 yükte, ek pull yapmıyoruz. Kameralar AI sunucudan kendi IP'sinden erişilebilir olmalı. |
+| 2026-05-25 | **Bütçe sabitlendi: PoC $10/ay, Production $25/ay** | İki fazlı kesin tavan. Grup C kamera sayısı bu bütçeye göre kalibre edilir. |
