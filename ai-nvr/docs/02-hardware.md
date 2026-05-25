@@ -72,6 +72,64 @@ Grup C boyutu **$25 Haiku bütçesine** göre kalibre edilir (motion sıklığı
 
 > Tüm kameralar AI sunucudan **direct** erişilebilir olmak zorunda. NVR'a ek yük binmez. Bkz. [`05-dahua-integration.md`](05-dahua-integration.md).
 
+## Maks. Kapasite ve Trade-off'lar
+
+"Coral'ı ve $25 Haiku bütçesini sonuna kadar zorlarsak kaç kamera AI'a alınabilir?" sorusunun cevabı. Üç darboğaz vardır; en sıkı olan kazanır.
+
+### Darboğaz 1: Coral USB
+
+~100 inference/saniye yapar. FPS düştükçe daha çok kamera, ama reaksiyon hızı düşer.
+
+| FPS | Maks kamera | Reaksiyon | Kullanım uygunluğu |
+|---|---|---|---|
+| 10 fps | 10 | ~100 ms | Hızlı kapı geçişi |
+| **5 fps** | **15** | **200 ms** | **Önerilen** — oda + kapı dengeli |
+| 3 fps | 22–25 | 330 ms | Kapı saniye hassasiyeti azalır |
+| 2 fps | 30 | 500 ms | Hızlı kişi/araç kaçabilir |
+| 1 fps | 50+ | 1 sn | State machine kullanılamaz |
+
+### Darboğaz 2: Haiku Bütçesi ($25/ay Production)
+
+$6,66'sı Grup A+B enrichment için ayrılır → **$18,34** Grup C'ye kalır.
+
+| Motion/cam/gün | Cam başı $/ay | Maks Grup C kamera |
+|---|---|---|
+| 10 (çok sakin) | $0,36 | 50+ |
+| 20 (sakin) | $0,72 | **25** |
+| 30 (orta) | $1,08 | **17** |
+| 50 (aktif) | $1,80 | 10 |
+| 100 (çok aktif) | $3,60 | 5 |
+
+### Darboğaz 3: 8 GB RAM + CPU
+
+- Frigate per-kamera: ~100–150 MB RAM
+- ffmpeg decode per-kamera: ~2–5% CPU (Coral varsa bile decode CPU'da)
+- 8 GB - (Postgres 500MB + Frigate base 500MB + bridge 300MB) = **~6.5 GB**
+- 6.5 GB / 150 MB = **~40 kamera RAM tavanı**
+- 4-core CPU: ~25–30 kamera CPU decode tavanı
+- 8-core CPU: ~50+ kamera
+
+### Birleşik Senaryolar
+
+| Konfig | Coral | Haiku C | **Toplam** | Trade-off |
+|---|---|---|---|---|
+| **Kaliteli** (5 fps, motion orta) | 15 | 12 | **~27** | Önerilen — reaksiyon iyi, kayıp az |
+| **Sıkıştırılmış** (3 fps, motion kalibre) | 22 | 15 | **~37** | Kapı saniye hassasiyeti azalır |
+| **Maks. teorik** (2 fps, threshold yüksek) | 30 | 17 | **~47** | Hızlı olay kaçabilir, CPU sınırı |
+| **Çok sakin alanlar** (1 fps, motion <10/gün) | 25 | 30+ | **~55** | State machine yok, sadece olay log |
+
+### Sonuç
+
+- **Üretim kalitesinde**: ~25–30 kamera (kaliteli)
+- **Rıza ile sıkıştırılırsa**: ~35–40 kamera (sıkıştırılmış)
+- **Teorik maks**: ~45–50 kamera (kalite düşer)
+
+100 kameranın **~%30–40'ı** AI kapsamında olabilir, geri kalanı NVR-only.
+
+### Pratik Tavsiye
+
+Başlangıç hedefi (10 oda + 5 kapı + 10 Grup C = 25 kamera) bu kapasitenin **rahat altındadır**. Sahaya çıkıldıkça Grup C'ye 5'er kamera ekle, $25 bütçe alarmı uyarı verene kadar büyüt.
+
 ### Coral USB'nin sağladığı
 
 - Tek Coral: ~15 stream (5 fps) detection

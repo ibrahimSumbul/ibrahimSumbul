@@ -79,24 +79,27 @@
 
 ## Network Topolojisi
 
-- Kameralar: ayrı VLAN (örn. `192.168.10.0/24`), sadece NVR ve AI sunucusu erişebilir.
+- Kameralar: ayrı VLAN (örn. `192.168.10.0/24`), AI sunucusu **direct erişebilmeli** (NVR'a RTSP pull yapmıyoruz).
 - AI sunucu: SnipeIT ile aynı VLAN'da olabilir ama Frigate kamera VLAN'ına da erişmeli.
 - Anthropic API: outbound HTTPS (443) gereklidir.
-- Dahua HTTP API: AI sunucudan NVR'a erişim (genelde 80/443).
+- Dahua NVR HTTP API: AI sunucudan NVR'a alarm push için erişim (genelde 80/443) — sadece alarm, RTSP yok.
+- SMTP: outbound 587 (Gmail TLS).
+- Viewer (FastAPI): reverse proxy arkasında 443, kullanıcılar e-posta linkinden erişir.
 
-## RAM Bütçesi (12 GB sunucu)
+## RAM Bütçesi (12 GB sunucu, 8 GB AI için müsait)
 
-| Servis | Tahmini RAM |
-|---|---|
-| Ubuntu 22.04 + sistem | ~1 GB |
-| SnipeIT (Apache + MySQL + PHP) | ~3 GB |
-| Frigate (CPU mode, 10 kamera) | ~2.5 GB |
-| PostgreSQL | ~0.5 GB |
-| Bridge Python servisi | ~0.3 GB |
-| Mosquitto | ~0.05 GB |
-| Grafana | ~0.3 GB |
-| **Toplam** | **~7.7 GB** |
-| **Tampon** | **~4.3 GB** |
+| Servis | PoC (CPU) | Production (Coral) |
+|---|---|---|
+| Ubuntu 22.04 + sistem | ~1 GB | ~1 GB |
+| SnipeIT (Apache + MySQL + PHP) | ~3 GB | ~3 GB |
+| Frigate (2–3 kamera CPU / 15 Coral) | ~1.5 GB | ~2.5 GB |
+| PostgreSQL | ~0.5 GB | ~0.5 GB |
+| Bridge Python servisi | ~0.3 GB | ~0.3 GB |
+| Mosquitto | ~0.05 GB | ~0.05 GB |
+| Grafana | ~0.3 GB | ~0.3 GB |
+| Viewer (FastAPI) | ~0.2 GB | ~0.2 GB |
+| **Toplam** | **~6.85 GB** | **~7.85 GB** |
+| **Tampon** | **~5 GB** | **~4 GB** |
 
 ## Erişim Modeli
 
@@ -104,6 +107,7 @@
 |---|---|---|---|
 | Frigate Web UI | 5000 | Iç (LAN) | reverse-proxy basic auth |
 | Grafana | 3000 | Iç (LAN) | Username/password |
+| Viewer (FastAPI) | 8080 | İç + reverse proxy 443 | HMAC view token |
 | Postgres | 5432 | Sadece Docker network | DB user/pass |
 | MQTT | 1883 | Sadece Docker network | DB user/pass |
 | Bridge | yok | Docker internal | - |

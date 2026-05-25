@@ -2,31 +2,60 @@
 
 Bu proje **PoC** olarak başlar, ama her milestone **production-ready** kalite hedefler. "Sonra düzeltirim" mantığı yok — her adım kalıcı olacak şekilde yazılır.
 
-## Milestone 0: Dokümantasyon ve Mimari (mevcut)
+## Milestone 0: Dokümantasyon ve Mimari ✅
 
 - [x] Mimari kararları (Frigate + Haiku + Dahua bridge)
 - [x] Donanım planı (PoC: CPU, prod: Coral USB)
-- [x] Maliyet analizi
-- [ ] Tüm `docs/` dosyaları tamam (8 dosya)
-- [ ] Repository açılışı + draft PR
+- [x] Maliyet analizi (PoC $10/ay, Production $25/ay)
+- [x] Tüm `docs/` dosyaları tamam (10 doküman)
+- [x] Repository açılışı + draft PR #1
 
 **Çıktı**: Bu repodaki `ai-nvr/` klasörü.
 
 ---
 
-## Milestone 1: Local Stack İskeleti
+## Milestone 1: Local Stack İskeleti  ← SIRADAKİ PR
 
 **Hedef**: Tek komutla ayağa kalkan, henüz kameraya bağlı olmayan stack.
 
+### Kapsam (dahil)
 - [ ] `docker-compose.yml` — Frigate (CPU detector), Postgres, Mosquitto, Grafana, Bridge
-- [ ] `.env.example` — tüm değişkenler
-- [ ] `frigate/config.yml` — boş şablon, comment'lerle açıklamalı
-- [ ] `bridge/` Python servis iskeleti (MQTT bağlanır, log atar)
-- [ ] `db/schema.sql` — tablolar oluşur
-- [ ] Health check: tüm container'lar `healthy`
-- [ ] `make up` / `make down` / `make logs` Makefile
+- [ ] `.env.example` — tüm değişkenler (PoC default'ları)
+- [ ] `frigate/config.yml` — boş şablon, comment'lerle açıklamalı, henüz kamera yok
+- [ ] `bridge/` Python servis iskeleti
+  - `bridge/main.py` — MQTT'ye bağlanır, log atar, idle döner
+  - `bridge/config.py` — env'den ayarlar
+  - `bridge/db.py` — Postgres async bağlantı (asyncpg)
+  - `bridge/mqtt.py` — async MQTT istemci
+  - `bridge/__init__.py`
+- [ ] `bridge/Dockerfile` (python:3.12-slim, multistage)
+- [ ] `bridge/pyproject.toml` (uv veya poetry)
+- [ ] `bridge/tests/` — smoke test (config yüklenir, DB bağlanır)
+- [ ] `db/schema.sql` — tablolar (zone_events, door_events, truck_events, llm_usage, camera_status)
+- [ ] `db/migrations/` klasörü (Alembic veya basit migrasyon SQL'leri)
+- [ ] `Makefile`: `up / down / logs / shell / test / fmt / lint`
+- [ ] Health check tüm container'lar `healthy`
+- [ ] CI: GitHub Actions — `make lint && make test`
+- [ ] `README` quickstart bölümü canlanır
 
-**Doğrulama**: `docker compose up -d && docker compose ps` → hepsi healthy.
+### Kapsam (dışında — sonraki milestone'lar)
+- ❌ Gerçek kameraya bağlanma (M2)
+- ❌ Haiku LLM çağrısı (M3)
+- ❌ Dahua alarm bridge (M4)
+- ❌ Zone state machine logic (M2)
+- ❌ Door traversal logic (M6.5)
+- ❌ E-posta + viewer (M6.5)
+
+**Doğrulama**:
+```bash
+make up
+docker compose ps        # tüm servisler healthy
+make test                # smoke testler geçer
+docker compose logs bridge   # "Bridge ready, waiting for events" yazar
+make down
+```
+
+CI yeşil, container 24 saat çakılmadan çalışır (boş loop).
 
 ---
 

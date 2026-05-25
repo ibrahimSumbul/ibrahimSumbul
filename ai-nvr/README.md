@@ -1,18 +1,19 @@
 # AI NVR — Dahua + Frigate + Claude Haiku Hibrit Kamera Analiz Sistemi
 
-100 IP kameralı bir Dahua NVR kurulumuna, **orijinal kayıt sistemini bozmadan**, alan yetki kontrolü, ilk-giriş tetikleyici ve tır/dorse renk kayıt yetenekleri ekleyen hafif AI katmanı.
+100 IP kameralı bir Dahua NVR kurulumuna, **orijinal kayıt sistemini bozmadan**, ilk-giriş tetikleyici, kapı geçişi log + e-posta bildirimi, ve tır/dorse renk kayıt yetenekleri ekleyen hafif AI katmanı.
 
 ## Durum
 
-> **PoC aşaması.** Dokümantasyon yazılıyor, kod henüz scaffold edilmedi. Aşağıdaki yol haritasına bakın.
+> **Dokümantasyon tamamlandı.** Kod henüz scaffold edilmedi — Milestone 1 ile başlıyor.
 
 | Aşama | Durum |
 |---|---|
 | Mimari kararları | ✅ Tamam |
-| Dokümantasyon | 🚧 Yazılıyor |
-| Docker iskelet | ⬜ Bekliyor |
-| Pilot (2–3 kamera) | ⬜ Bekliyor |
-| Üretim (10 alan / 100 kamera) | ⬜ Bekliyor |
+| Dokümantasyon (10 doküman) | ✅ Tamam |
+| Docker iskelet (M1) | ⬜ Sıradaki PR |
+| Tek kamera pilot (M2) | ⬜ Bekliyor |
+| LLM + Dahua alarm + e-posta (M3–M6.5) | ⬜ Bekliyor |
+| Üretim (~25 AI kamera) | ⬜ Bekliyor |
 | Coral USB upgrade | ⬜ Türkiye tedarik bekliyor |
 
 ## Ne Yapar?
@@ -98,14 +99,16 @@ docker compose up -d
   │   │   Bridge (zone state + LLM)     ───── 0.3 GB       │    │
   │   │   Mosquitto (MQTT)              ───── 0.05 GB      │    │
   │   │   Grafana (dashboard)           ───── 0.3 GB       │    │
+  │   │   Viewer (FastAPI, e-posta linki) ─── 0.2 GB       │    │
   │   │                                                     │    │
   │   └─────────────────────────────────────────────────────┘    │
   └──────────────────────────────────────────────────────────────┘
               ▲                                ▲
-              │ RTSP sub-stream                │ HTTP alarm
-              │                                ▼
-       10 Dahua IP kamera              Dahua NVR (orijinal kayıt)
-       (100 kameradan 10'u izlenir)    (DSS/SmartPSS panel görür)
+              │ RTSP sub-stream (direct)       │ HTTP alarm
+              │ kameralardan                   ▼
+       Dahua IP kameralar              Dahua NVR (orijinal kayıt)
+       (15 Coral + 10 Haiku motion     (DSS/SmartPSS panel görür)
+        + 75 sadece NVR kaydı)
 ```
 
 Detay için → [`docs/01-architecture.md`](docs/01-architecture.md).

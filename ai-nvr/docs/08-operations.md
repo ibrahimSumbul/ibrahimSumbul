@@ -41,18 +41,21 @@ Sistem unutulup ayda 5 dakika bakılacak şekilde tasarlanır. Bu doküman onu m
 
 | Kural | Eşik | Aksiyon |
 |---|---|---|
-| LLM aylık maliyet | > $24 (bütçe %80) | Uyarı |
-| LLM aylık maliyet | > $30 | LLM disable + acil uyarı |
+| LLM aylık maliyet (PoC bütçe $10) | > $8 (%80) | Uyarı |
+| LLM aylık maliyet (PoC) | > $10 | LLM disable + acil uyarı |
+| LLM aylık maliyet (Production bütçe $25) | > $20 (%80) | Uyarı |
+| LLM aylık maliyet (Production) | > $25 | LLM disable + acil uyarı |
 | **Kamera offline** | > 60 sn frame yok | **Uyarı + e-posta** |
 | Kamera offline (kritik kapı/oda) | > 60 sn | **Acil + telefon push** |
-| **NVR CPU** | > %70 | Uyarı |
-| **NVR CPU** | > %80 | Acil + Grup C otomatik kapat |
 | Postgres bağlantı kopuk | herhangi | Acil |
 | Disk doluluk | > %80 | Uyarı |
 | Disk doluluk | > %95 | Acil + auto-cleanup |
 | Bridge container restart | > 3/saat | Uyarı |
 | Dahua alarm fail | > %20 | Uyarı |
 | SMTP fail | > 5 ardışık | Uyarı (e-posta gitmiyor) |
+| Sunucu RAM | > %85 | Uyarı (SnipeIT etkilenebilir) |
+
+> NVR'a RTSP pull yapmıyoruz, NVR CPU izlemeye gerek yok. NVR'ın kendi sağlık göstergesi orijinal Dahua paneliyle takip edilir.
 
 ### Kamera Offline Detayı
 

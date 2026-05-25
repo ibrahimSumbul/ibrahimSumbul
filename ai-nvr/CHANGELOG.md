@@ -27,6 +27,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) tarzı.
 - **NVR'a yük ekleme iptal edildi** — sadece direct kamera bağlantısı kullanılır
 - **Sabit bütçeler**: PoC $10/ay Haiku, Production $25/ay Haiku
 - Grup C kamera sayısı motion yoğunluğuna göre $25 bütçeye kalibre edilir (10–12)
+- **Maks. kapasite analizi**: Coral + $25 birlikte zorlanırsa ~25–47 kamera (konfig bağlı)
+- M1 (Local Stack İskeleti) kapsamı netleştirildi: hangi dosyalar dahil/dışında
+- Tüm dokümanlar tutarlılık için gözden geçirildi:
+  - 01-architecture: mimari diyagram viewer + mailer eklendi, RAM bütçesi PoC/Prod ayrı, network direct-only
+  - 03-setup: .env example güncellendi (NVR_HOST sadece alarm, SMTP+Viewer eklendi, bütçe default 10), Frigate config record role kaldırıldı
+  - 04-zone-rules: kapsam ifadeleri PoC/Production ayrı
+  - 08-operations: NVR CPU alarmları kaldırıldı (NVR pull yok), LLM eşikleri PoC/Production ayrı, RAM alarmı eklendi
 - **NVR orijinal panel davranışı**: External Alarm + DSS Pro Custom Event seçenekleri
 - **Kamera offline alarm**: 60 sn frame yok → uyarı; kritik kameralar için anlık e-posta
 - `10-why-frigate.md` eklendi: saf Haiku neden yapılmaz teknik gerekçeler

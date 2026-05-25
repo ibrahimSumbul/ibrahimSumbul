@@ -6,7 +6,7 @@ Bu sistemin en kritik mantığı: **gereksiz alarm üretme, ama gerçek olayı k
 
 ### Oda (alan) kuralları
 
-1. 100 kameradan **10 alan** AI ile aktif izlenir.
+1. 100 kameradan **10 oda alanı** AI ile aktif izlenir (Production). PoC'de 1–2 pilot oda.
 2. Bazı alanlarda: alan içinde **biri varken uyarı verme.**
 3. Alan **boşken, ilk gelen kişi** kayda alınır ve alarm üretir.
 4. İzleme süresi **1 dakika veya üstüne** çıkabilir (kişi alanda kaldığı sürece).
