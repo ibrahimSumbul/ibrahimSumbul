@@ -6,7 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) tarzı.
 ## [Unreleased] — PoC çalışması
 
 ### Added
-- Proje dokümantasyon iskeleti (`docs/01..09`)
+- Proje dokümantasyon iskeleti (`docs/01..11`)
 - `README.md` proje genel bakış
 - `ROADMAP.md` PoC → Production milestone planı
 - `.gitignore` (Python, Docker, Node, IDE)
@@ -14,6 +14,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) tarzı.
 - **E-posta bildirim + viewer servisi** — imzalı link ile snapshot + klip izleme
 - **Milestone 6.5** — kapı olayları + e-posta bildirimi
 - `docs/09-notifications.md`
+- `docs/10-why-frigate.md` — saf Haiku neden yapılmaz teknik gerekçeler
+- `docs/11-tech-decisions.md` — teknoloji seçim kararları (Frigate, Python, Haiku, Postgres, n8n vs alternatifler)
 
 ### Changed
 - Donanım bütçesi sabit: **maksimum 1× Coral USB ($60)**

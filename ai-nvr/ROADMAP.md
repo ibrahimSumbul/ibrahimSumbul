@@ -188,3 +188,5 @@ CI yeşil, container 24 saat çakılmadan çalışır (boş loop).
 | 2026-05-25 | Saf Haiku reddedildi | Tracking yok, gecikme 1.5 sn, rate limit, maliyet patlar. Frigate ile hibrit zorunlu. |
 | 2026-05-25 | **NVR yük opsiyonu iptal — direct bağlantı zorunlu** | NVR %50 yükte, ek pull yapmıyoruz. Kameralar AI sunucudan kendi IP'sinden erişilebilir olmalı. |
 | 2026-05-25 | **Bütçe sabitlendi: PoC $10/ay, Production $25/ay** | İki fazlı kesin tavan. Grup C kamera sayısı bu bütçeye göre kalibre edilir. |
+| 2026-05-25 | n8n reddedildi | Stateless workflow → state machine için round-trip; node başına 100–300 ms gecikme; 500 MB RAM ek yük; CI/test zor. Gelecekte secondary bildirim dağıtımında değerlendirilir. |
+| 2026-05-25 | Python + asyncio seçildi (Node/Go/Rust elendi) | Anthropic/Pydantic/asyncpg olgun, ML ekosistem güçlü, hızlı yazma. Bkz. `docs/11-tech-decisions.md`. |

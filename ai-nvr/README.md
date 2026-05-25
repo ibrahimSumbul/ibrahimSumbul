@@ -82,6 +82,7 @@ docker compose up -d
 | [`docs/08-operations.md`](docs/08-operations.md) | İşletim, izleme, yedekleme, sorun giderme |
 | [`docs/09-notifications.md`](docs/09-notifications.md) | E-posta bildirimleri + imzalı izleme linki + viewer servisi |
 | [`docs/10-why-frigate.md`](docs/10-why-frigate.md) | Frigate neden gerekli? Saf Haiku ile yapılamaz mı? |
+| [`docs/11-tech-decisions.md`](docs/11-tech-decisions.md) | Teknoloji seçim kararları — Frigate, Python, Haiku, Postgres, n8n vs |
 | [`ROADMAP.md`](ROADMAP.md) | PoC → Production milestone'ları |
 
 ## Mimari Özet
