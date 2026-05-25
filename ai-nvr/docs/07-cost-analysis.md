@@ -2,14 +2,19 @@
 
 ## Özet
 
-| Kalem | PoC | Production (10 alan) |
+Donanım bütçesi sabitlendi: **maksimum 1 adet Coral USB ($60)**. Coral kapasitesini aşan kameralar Haiku ile desteklenir.
+
+| Kalem | PoC | Production (15 Coral + 10 Haiku) |
 |---|---|---|
-| **Donanım (tek seferlik)** | $0 (mevcut sunucu) | +$60 (Coral USB) |
-| **Aylık LLM (Haiku)** | < $1 | ~$2–5 |
+| **Donanım (tek seferlik)** | $0 (mevcut sunucu) | +$60 (1× Coral USB) |
+| **Aylık LLM (Haiku)** | < $1 | ~$15–20 |
 | **Aylık elektrik** | ~$1 | ~$3 (CPU + Coral) |
-| **Aylık toplam** | **~$1–2** | **~$5–8** |
-| **Yıllık toplam (1. yıl)** | ~$24 | ~$120 + $60 = $180 |
-| **Yıllık toplam (2. yıl)** | ~$24 | ~$120 |
+| **Aylık SMTP** | $0 (Gmail) | $0 |
+| **Aylık toplam** | **~$1–2** | **~$18–25** |
+| **Yıllık toplam (1. yıl)** | ~$24 | ~$240 + $60 = $300 |
+| **Yıllık toplam (2. yıl)** | ~$24 | ~$240 |
+
+> Kapsam genişlerse (kamera ekleyince) maliyet doğrusal Haiku artar — donanım yatırımı yok.
 
 ## Kıyaslama: Üç Yaklaşım
 
@@ -17,9 +22,9 @@
 |---|---|---|---|---|
 | Saf bulut LLM (1 fps, 100 kamera) | $0 | $2.592.000 | $31 M | $93 M |
 | Frigate + GPU (saf lokal) | $1.500 | ~$40 | $1.980 | $2.940 |
-| **Bu proje: Hibrit (10 alan + Haiku)** | **$60** | **~$5** | **~$120** | **~$240** |
+| **Bu proje: Hibrit (Coral + Haiku)** | **$60** | **~$18** | **~$300** | **~$540** |
 
-> Bu proje en pahalı yaklaşımın **1/200.000**'i, en ucuz lokal alternatifin **1/10**'u.
+> Bu proje en pahalı yaklaşımın **1/150.000**'i, en ucuz lokal alternatifin **1/5**'i.
 
 ## LLM Maliyeti Detay
 
@@ -33,17 +38,47 @@
 | Output JSON | 200 | 4,00 | $0,000800 |
 | **Per çağrı toplam** | | | **~$0,0012** |
 
-### Aylık (üretim senaryo)
+### Aylık (üretim senaryo — 15 Coral + 10 Haiku-only kamera)
+
+**Grup A+B (15 kamera Coral'da)** — Haiku sadece zenginleştirme için:
 
 | Olay tipi | Adet/gün | Çağrı/ay | Aylık $ |
 |---|---|---|---|
 | Tır+dorse renk | 20 | 600 | $0,72 |
 | Anomali doğrulama | 10 | 300 | $0,36 |
 | Yetkisiz alan (M8+) | 5 | 150 | $0,18 |
-| Test/debug | – | 100 | $0,12 |
-| **Toplam** | | **~1.150** | **~$1,40** |
+| Kapı geçişi enrichment (ops.) | 150 | 4.500 | $5,40 |
+| **Alt toplam** | | **5.550** | **~$6,66** |
 
-Güvenli pay: bütçe **$20/ay** olarak konur (.env), alarm $16'da.
+**Grup C (10 kamera Coral'a sığmadı, motion-triggered Haiku)** — her motion event Haiku'ya gider:
+
+| Parametre | Değer |
+|---|---|
+| Motion event / kamera / gün | ~30 |
+| Toplam motion events / ay | 10 × 30 × 30 = 9.000 |
+| Haiku call başına | $0,0012 |
+| **Alt toplam** | **~$10,80** |
+
+| Test/debug | – | 100 | $0,12 |
+| **Genel Toplam** | | **~14.650** | **~$17,60/ay** |
+
+Güvenli pay: bütçe **$30/ay** olarak konur (.env), alarm $24'te.
+
+### Grup C maliyet duyarlılığı
+
+Motion event sayısı en büyük değişken. Karşılaştırma:
+
+| Motion/kamera/gün | Aylık çağrı | Aylık $ |
+|---|---|---|
+| 15 (sakin alan) | 4.500 | $5,40 |
+| 30 (orta) | 9.000 | $10,80 |
+| 50 (yoğun) | 15.000 | $18,00 |
+| 100 (problemli) | 30.000 | $36,00 |
+
+Eğer Grup C kameraları çok motion üretiyorsa:
+- Motion threshold'unu yükselt (küçük gürültüleri yoksay)
+- Mesai dışı sadece aktif et
+- O kamerayı Grup D'ye düşür (NVR-only)
 
 ## Donanım Maliyeti
 
@@ -56,9 +91,11 @@ Güvenli pay: bütçe **$20/ay** olarak konur (.env), alarm $16'da.
 
 ### Production Upgrade
 
-- Coral USB Accelerator: ~₺2.500–3.500 (≈ $60–80)
+- **1× Coral USB Accelerator (kesin tavan)**: ~₺2.500–3.500 (≈ $60)
 - Disk: mevcut yerde ~25 GB lazım, ayrı disk gerekmez
 - (Opsiyonel) UPS: zaten sunucuda var varsayımıyla
+
+> Ek Coral alınmaz. Daha fazla kamera AI'a sokulacaksa **maliyet Haiku tarafında doğrusal** artar; donanım maliyeti sabit kalır.
 
 ### Gelecek (12 ay sonra büyürse)
 
@@ -93,10 +130,12 @@ Sistem ne işe yarıyor (ekonomik değer)?
 
 | Senaryo | Maliyet etkisi | Önlem |
 |---|---|---|
-| Kamera saatte 50 yanlış-pozitif "truck" | Aylık $40 ekstra | Frigate `min_score` 0.7+, zone'lar dar |
-| Anthropic fiyatları %50 arttı | Aylık $1.5 → $2.3 | Önemsiz, bütçe rahat |
-| 10 alan → 30 alan büyüme | Aylık $5 → $15 | Hâlâ ucuz, GPU lazım olabilir |
+| Grup C kamerası "yağmurda titreşen yaprak" → her dk motion | Aylık +$10–40 | Motion threshold yükselt, gece-only mode |
+| Kamera saatte 50 yanlış-pozitif "truck" | Aylık +$40 | Frigate `min_score` 0.7+, zone'lar dar |
+| Anthropic fiyatları %50 arttı | Aylık $18 → $27 | Bütçe artır veya Grup C küçült |
+| 15 alan → 30 alan büyüme | Aylık $18 → $35 | Hâlâ ucuz, donanım yok |
 | API rate limit yendi | Hizmet kesintisi | Queue + retry + bütçe guard |
+| Spam motion → SMTP rate hit | Mail kesintisi | Per-zone 30 mail/saat limit (bkz. `09-notifications.md`) |
 
 ## Karşılaştırma Tablosu (Ek)
 

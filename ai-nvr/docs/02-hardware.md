@@ -30,11 +30,40 @@ CPU detector ile beklenen yük (10 kamera, 640×480 @ 5fps, YOLOv8n):
 | Coral USB Accelerator | $60 | ₺2.500–3.500 | Hepburn/Robotistan/Direnc |
 | Coral M.2 (mini PCIe) | $40 | yok/zor | İthalat gerekir |
 
-**Tercih**: Coral USB. Sebep: PCIe slot şartı yok, takıp çalıştır.
+**Bütçe kararı**: **Maksimum 1 adet Coral USB ($60)**. Ek Coral alınmaz. Coral'a sığmayan kameralar Haiku ile desteklenir (aşağıdaki kapasite tablosu).
+
+### Coral USB Kapasitesi (Gerçekçi)
+
+Tek Coral USB, Edge TPU üzerinde **~100 inference/saniye** yapar. Kamera başına FPS düşürüldüğünde:
+
+| FPS / kamera | Maks kamera | Notu |
+|---|---|---|
+| 10 fps | 8–10 | Hızlı reaksiyon |
+| 5 fps | **15** | **Önerilen kapasite** |
+| 3 fps | 20–25 | Reaksiyon gecikir |
+| 2 fps | 30+ | Sadece olay tetikçi |
+
+> **Karar**: 5 fps'te **15 kamera Coral üzerinde**, geri kalanlar motion-triggered Haiku ile çalışır.
+
+### 100 Kamera için Tahsis Planı
+
+| Grup | Kamera | Mekanizma | Maliyet |
+|---|---|---|---|
+| **A**: Aktif izlenen alanlar (oda) | 10 | Frigate + Coral (state machine) | TPU |
+| **B**: Kapılar (alarm + giriş/çıkış log) | 5 | Frigate + Coral (door traversal) | TPU |
+| **C**: Düşük öncelik (motion → Haiku) | 10 | ffmpeg motion + Haiku snapshot | LLM |
+| **D**: Sadece NVR kaydı | 75 | NVR kayıt, AI yok | $0 |
+| **Toplam** | **100** | | |
+
+Grup A+B: **15 kamera Coral'da**, kapasiteye sığar.
+Grup C: Coral kullanmaz, hareket halinde Haiku çağrısı yapar.
+Grup D: Hiç AI işlemi yapılmaz, sadece Dahua NVR kaydı.
+
+> Grup C'nin sayısı bütçeyle dengelenir. Bkz. [`07-cost-analysis.md`](07-cost-analysis.md).
 
 ### Coral USB'nin sağladığı
 
-- Tek Coral: ~10–15 stream (low FPS) detection
+- Tek Coral: ~15 stream (5 fps) detection
 - Inference süresi: ~7–10 ms (CPU'nun ~10 katı hızlı)
 - CPU yükünü ~%70 azaltır
 - Daha hızlı reaksiyon, daha az gecikme
@@ -64,7 +93,9 @@ detectors:
 
 ## Üretim Donanım Hedefi (12 ay sonra)
 
-Eğer kapsam büyürse:
+**Bütçe sabitlendi**: ek donanım alınmaz. Kapsam genişlerse Haiku üzerinden ölçeklenir (maliyeti çok küçük artar).
+
+İleride donanım yatırımı yapılacaksa:
 
 | Senaryo | Donanım |
 |---|---|

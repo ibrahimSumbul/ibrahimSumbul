@@ -101,6 +101,24 @@ Bu proje **PoC** olarak başlar, ama her milestone **production-ready** kalite h
 
 ---
 
+## Milestone 6.5: Kapı Olayları + E-posta Bildirim
+
+**Hedef**: Kapılarda saniye hassasiyetinde giriş/çıkış log + e-posta linki.
+
+- [ ] `bridge/door.py` — kapı state machine (entry_ts, exit_ts, direction)
+- [ ] DB tablosu `door_events`
+- [ ] `bridge/mailer.py` — SMTP entegrasyonu (Gmail App Password)
+- [ ] HTML e-posta şablonu (snapshot inline)
+- [ ] View token üretimi (HMAC, 7 gün TTL)
+- [ ] `viewer/` FastAPI servisi (`/v/{event_id}?t={token}`)
+- [ ] Snapshot clip (5 sn) opsiyonel kayıt
+- [ ] Reverse proxy (Nginx + Let's Encrypt) konfigürasyon dokümanı
+- [ ] SMTP rate limit + retry
+
+**Doğrulama**: Bir kapı kameraya bir kişi geçer → 30 sn içinde e-posta gelir, linke tıklanır, snapshot ve klip oynatılır.
+
+---
+
 ## Milestone 7: Operasyonel Olgunluk
 
 **Hedef**: Sistem unutulabilir hale gelsin.
@@ -134,3 +152,5 @@ Bu proje **PoC** olarak başlar, ama her milestone **production-ready** kalite h
 | 2026-05-25 | Coral USB ertelendi | Türkiye tedarik süresi var, PoC CPU ile başlayabilir. |
 | 2026-05-25 | Plaka okuma kapsam dışı | Müşteri renk yeterli dedi. ALPR ayrı bir milestone. |
 | 2026-05-25 | Yüz tanıma kapsam dışı | İlk fazda zone state machine yeter. M8'e bırakıldı. |
+| 2026-05-25 | Donanım tavanı $60 (1× Coral USB) | Ek Coral alınmaz. Aşımı Haiku ile karşılanır. |
+| 2026-05-25 | Kapı olayları ayrı event tipi | Oda mantığından farklı: her geçişte alarm, ms hassasiyet log, e-posta + link. |

@@ -18,25 +18,37 @@
 ## Ne Yapar?
 
 1. **Dahua NVR kayda devam eder** — bu sistem ona dokunmaz, sadece RTSP sub-stream'leri paralel okur.
-2. **10 izlenen alan** için Frigate ile lokal kişi/araç tespiti yapar.
-3. **Akıllı state machine**: alan boşken ilk giren kişiyi kaydeder, dolu alanlarda spam uyarısı vermez. İzleme süresi 1+ dakika.
-4. **Kamyon girişinde** Claude Haiku ile **çekici (tır) ve dorse rengini** ayrı kaydeder. Plaka okumaz.
-5. **Olayları Dahua NVR'a alarm olarak** geri besler — orijinal DSS/SmartPSS panelinde görünür.
+2. **15 kamera Coral USB'de** Frigate ile lokal kişi/araç tespiti (10 oda + 5 kapı).
+3. **Coral'a sığmayan kameralar Haiku ile desteklenir** (motion-triggered snapshot analizi). Donanım bütçesi maksimum $60'da sabit.
+4. **Oda state machine'i**: alan boşken ilk giren kişiyi kaydeder, dolu alanda spam uyarısı vermez. İzleme süresi 1+ dakika.
+5. **Kapı olayları**: her geçişte alarm, **saniye hassasiyetinde** giriş ve çıkış zamanı kaydedilir. E-posta ile **canlı izleme linki** gönderilir.
+6. **Kamyon girişinde** Claude Haiku ile **çekici (tır) ve dorse rengini** ayrı kaydeder. Plaka okumaz.
+7. **Olayları Dahua NVR'a alarm olarak** geri besler — orijinal DSS/SmartPSS panelinde görünür.
 
-## Hedef Donanım (PoC)
+## Hedef Donanım
 
 - Mevcut Linux Ubuntu 22.04 sunucu, 12 GB RAM (4 GB SnipeIT tarafından kullanılıyor)
 - **PoC**: CPU-only Frigate (~8 GB RAM tampon)
-- **Production**: + Coral USB Accelerator (~$60, Türkiye'den tedarik sonrası)
+- **Production**: + **1 adet** Coral USB Accelerator (~$60, Türkiye'den tedarik sonrası)
+- **Donanım tavanı sabittir.** Daha fazla AI kamerası gerekirse maliyet sadece Haiku tarafında artar.
+
+## 100 Kamera Tahsis Planı
+
+| Grup | Kamera | Mekanizma | Aylık $ |
+|---|---|---|---|
+| **A**: Aktif izlenen alanlar (oda) | 10 | Frigate + Coral | (Coral'a dahil) |
+| **B**: Kapılar (alarm + log + e-posta) | 5 | Frigate + Coral | (Coral'a dahil) |
+| **C**: Düşük öncelik | 10 | Motion + Haiku snapshot | ~$11 |
+| **D**: Sadece NVR kaydı | 75 | NVR kayıt, AI yok | $0 |
 
 ## Hedef Aylık Maliyet
 
 | Senaryo | LLM çağrı/ay | Aylık |
 |---|---|---|
 | PoC (2–3 kamera) | ~300 | < $1 |
-| Production (10 alan) | ~1.000–1.500 | ~$2–5 |
+| Production (Grup A+B+C, 25 kamera) | ~14.500 | **~$18** |
 
-Donanım yatırımı toplam: **~$60** (Coral USB) + mevcut sunucu.
+Donanım yatırımı toplam: **$60** (1× Coral USB) + mevcut sunucu.
 
 ## Hızlı Başlangıç
 
@@ -61,6 +73,7 @@ docker compose up -d
 | [`docs/06-llm-strategy.md`](docs/06-llm-strategy.md) | Claude Haiku promptları, tır/dorse renk analizi |
 | [`docs/07-cost-analysis.md`](docs/07-cost-analysis.md) | Maliyet analizi, kıyaslamalar |
 | [`docs/08-operations.md`](docs/08-operations.md) | İşletim, izleme, yedekleme, sorun giderme |
+| [`docs/09-notifications.md`](docs/09-notifications.md) | E-posta bildirimleri + imzalı izleme linki + viewer servisi |
 | [`ROADMAP.md`](ROADMAP.md) | PoC → Production milestone'ları |
 
 ## Mimari Özet
