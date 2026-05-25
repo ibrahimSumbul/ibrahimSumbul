@@ -6,6 +6,57 @@ Bu sistem Dahua NVR/kameralarla **iki yönlü** iletişir:
 
 > NOT: Dahua API'leri model/firmware'e göre değişir. Bu doküman tipik DSS/NVR4xx/5xx serileri içindir. PoC'nin ilk haftası tamamen API uyum testleri için harcanmalıdır.
 
+## Bağlantı Stratejisi: NVR vs Doğrudan Kamera
+
+NVR şu an **%50 yükte çalışıyor**. Üzerine sub-stream pull eklemek riskli olabilir; önce hesaplayalım.
+
+### NVR Yük Tahmini
+
+| Etki kalemi | Yaklaşık |
+|---|---|
+| Her RTSP sub-stream pull (640×480 @ 5 fps, H.264) | ~1–3% NVR CPU + ~256 kbps |
+| 15 paralel stream | **+15–45% NVR CPU** |
+| Snapshot endpoint sorgusu (anlık) | ~5% CPU/sorgu |
+| H.265 → H.264 transcode (gerekirse) | +2–5%/stream |
+
+Mevcut %50 + yeni ~%30 = **~%80**. Tehlikeli sınırın eteğinde; kayıt güvenilirliği etkilenebilir.
+
+> **Karar**: Direct kamera bağlantısı **birinci tercih**. NVR üzerinden bağlantı **yedek**. NVR CPU %70'i geçerse derhal direct'e geç.
+
+### Tercih Sıralaması
+
+```
+                  ┌───────────────────────────────┐
+                  │  Kamera erişilebilir mi?      │
+                  │  (statik IP, network açık?)   │
+                  └───────┬─────────────┬─────────┘
+                          │ Evet        │ Hayır
+                          ▼             ▼
+              ┌──────────────────┐  ┌──────────────────┐
+              │  DIRECT bağlantı │  │  NVR üzerinden   │
+              │  Kamera IP:554   │  │  channel=N       │
+              │  NVR'a yük: 0    │  │  NVR yük: artar  │
+              └──────────────────┘  └──────────────────┘
+```
+
+İdeal hibrit:
+- Kritik 10 oda kamerası → direct
+- 5 kapı kamerası → direct (yüksek olay frekansı)
+- 10 Grup C kamerası → NVR üzerinden olabilir (motion sadece, az kullanır)
+
+### NVR Yük İzleme (zorunlu)
+
+`bridge/`'de NVR HTTP `/cgi-bin/magicBox.cgi?action=getCpuUsage` periyodik sorgulanır:
+
+| NVR CPU | Aksiyon |
+|---|---|
+| < %60 | Sessiz |
+| 60–70 | Log uyarı |
+| 70–80 | Grafana alarm + Slack/email |
+| > %80 | Otomatik stream sayısını azalt (Grup C devre dışı) |
+
+`llm_usage` ile aynı tabloda `nvr_health` snapshot'ları tutulur.
+
 ## RTSP URL'leri
 
 Standart Dahua RTSP path'i:
@@ -20,21 +71,36 @@ rtsp://<user>:<pass>@<ip>:554/cam/realmonitor?channel=<N>&subtype=<S>
 | `subtype=0` | Main stream (yüksek çözünürlük, kayıt için) |
 | `subtype=1` | Sub stream (düşük çözünürlük, AI detection için) |
 
-### Doğrudan kameraya bağlanma (önerilen)
-
-Her kameranın IP'si varsa doğrudan kameraya bağlanın. NVR'ı middleman yapmak gereksiz yük.
+### Doğrudan kameraya bağlanma
 
 ```
 rtsp://admin:KAMERA_ŞİFRESİ@192.168.10.21:554/cam/realmonitor?channel=1&subtype=1
 ```
 
-### NVR üzerinden bağlanma
-
-Kamera IP'si yoksa NVR üzerinden çekin:
+### NVR üzerinden bağlanma (channel ile)
 
 ```
 rtsp://admin:NVR_ŞİFRESİ@192.168.10.10:554/cam/realmonitor?channel=3&subtype=1
 ```
+
+> **NOT (channel adı)**: Dahua'da NVR kanalına isim verebilirsiniz ("DEPO_GIRIS"), ama RTSP URL'i hâlâ **rakam** ister. Channel adını URL'e koyamazsınız. Eşleştirmeyi config'de yapıyoruz:
+
+```yaml
+# bridge/config/cameras.yaml
+nvr_channels:
+  depo_giris:                   # bizim ad
+    nvr_channel_id: 3           # Dahua kanal numarası
+    nvr_channel_name: "DEPO_GIRIS"   # Dahua paneldeki ad (sadece referans)
+    connection: nvr             # 'direct' veya 'nvr'
+    ip: 10.0.0.10               # NVR IP veya kamera IP
+  ana_kapi:
+    nvr_channel_id: 12
+    nvr_channel_name: "ANA_KAPI"
+    connection: direct
+    ip: 192.168.10.42
+```
+
+Bridge bu yaml'i okuyup `frigate/config.yml`'i otomatik üretebilir (M1'de).
 
 ### Sub-stream ayarı
 
@@ -43,6 +109,41 @@ Web UI → Camera → Stream → Sub Stream:
 - FPS: 5–10
 - Codec: H.264 (H.265 Frigate'te yavaş olabilir)
 - Bitrate: 256–512 kbps yeterli
+
+## NVR Orijinal Panelinde Ne Görünür?
+
+Bizim AI sistemimizden gelen olaylar Dahua DSS/SmartPSS panelinde **"External Alarm"** olay tipi olarak görünür. Ayrıntı:
+
+| Panel öğesi | Görünüm | Not |
+|---|---|---|
+| Live event listesi | `External Alarm — depo_giris — 14:32:18` | Anlık |
+| Olay log (history) | Filtre: type=External Alarm | 30 gün retention default |
+| Mobile push (DMSS app) | Title + snapshot | DMSS açık olmalı |
+| Kayıt timeline marker | İşaretli (kırmızı çubuk) | Olay anına atlamak için tıklanabilir |
+| Snapshot attach | Bazı NVR modelleri destekler | DSS Pro'da REST API ile zengin metadata |
+| Açıklama metni | Bizim gönderdiğimiz string | Örn. "Boş depo'ya ilk giriş — kişi" |
+
+### Dahua'nın Kendi AI Toolları + Bizim Sistem
+
+Dahua NVR'ın **kendi AI motoru proprietary**'dir. Onun yerine geçmiyoruz, **tetikliyoruz**.
+
+| Dahua AI Tool | Bizimle entegrasyon |
+|---|---|
+| IVS (perimeter, tripwire, intrusion) | Tetiklenebilir — bizim olayımız IVS event'i gibi gözükür |
+| Face detection | Sadece Dahua kameralarında gömülü, dışarıdan extend edilemez |
+| Vehicle / ANPR | Tetiklenebilir, snapshot eklenebilir (model bağlı) |
+| Heat map | Bizim için sadece okunur |
+| Custom event (**DSS Pro REST API**) | **En zengin entegrasyon** — başlık + açıklama + snapshot + tıklanabilir link |
+
+### Tavsiye: Önce DSS Pro var mı sor
+
+- DSS Pro varsa → Custom Event API kullan (en iyi UX)
+- DSS Express / SmartPSS Plus → External Alarm + Virtual Input
+- Saf NVR (DSS yok) → ONVIF Send Event veya Virtual Input
+
+İlk hafta keşif: hangi NVR firmware'i + hangi DSS sürümü?
+
+---
 
 ## HTTP Alarm Gönderme
 

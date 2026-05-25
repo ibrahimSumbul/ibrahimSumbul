@@ -154,3 +154,6 @@ Bu proje **PoC** olarak başlar, ama her milestone **production-ready** kalite h
 | 2026-05-25 | Yüz tanıma kapsam dışı | İlk fazda zone state machine yeter. M8'e bırakıldı. |
 | 2026-05-25 | Donanım tavanı $60 (1× Coral USB) | Ek Coral alınmaz. Aşımı Haiku ile karşılanır. |
 | 2026-05-25 | Kapı olayları ayrı event tipi | Oda mantığından farklı: her geçişte alarm, ms hassasiyet log, e-posta + link. |
+| 2026-05-25 | NVR bağlantı: direct öncelikli | NVR %50 yükte, üzerine pull eklemek riskli. Direct yapılamayan yerler NVR channel ile. |
+| 2026-05-25 | NVR CPU > %80 → Grup C otomatik kapanır | Kayıt güvenliği LLM gözlemden önceliklidir. |
+| 2026-05-25 | Saf Haiku reddedildi | Tracking yok, gecikme 1.5 sn, rate limit, maliyet patlar. Frigate ile hibrit zorunlu. |

@@ -23,7 +23,9 @@
 4. **Oda state machine'i**: alan boşken ilk giren kişiyi kaydeder, dolu alanda spam uyarısı vermez. İzleme süresi 1+ dakika.
 5. **Kapı olayları**: her geçişte alarm, **saniye hassasiyetinde** giriş ve çıkış zamanı kaydedilir. E-posta ile **canlı izleme linki** gönderilir.
 6. **Kamyon girişinde** Claude Haiku ile **çekici (tır) ve dorse rengini** ayrı kaydeder. Plaka okumaz.
-7. **Olayları Dahua NVR'a alarm olarak** geri besler — orijinal DSS/SmartPSS panelinde görünür.
+7. **Olayları Dahua NVR'a alarm olarak** geri besler — orijinal DSS/SmartPSS panelinde "External Alarm" tipinde görünür.
+8. **Kamera offline tespit** — herhangi bir kamera 60 sn'den fazla frame göndermezse uyarı/e-posta.
+9. **NVR yük izleme** — NVR CPU %70'i geçince uyarı, %80'de Grup C otomatik devre dışı (kayıt güvenliği önce).
 
 ## Hedef Donanım
 
@@ -74,6 +76,7 @@ docker compose up -d
 | [`docs/07-cost-analysis.md`](docs/07-cost-analysis.md) | Maliyet analizi, kıyaslamalar |
 | [`docs/08-operations.md`](docs/08-operations.md) | İşletim, izleme, yedekleme, sorun giderme |
 | [`docs/09-notifications.md`](docs/09-notifications.md) | E-posta bildirimleri + imzalı izleme linki + viewer servisi |
+| [`docs/10-why-frigate.md`](docs/10-why-frigate.md) | Frigate neden gerekli? Saf Haiku ile yapılamaz mı? |
 | [`ROADMAP.md`](ROADMAP.md) | PoC → Production milestone'ları |
 
 ## Mimari Özet

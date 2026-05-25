@@ -41,14 +41,41 @@ Sistem unutulup ayda 5 dakika bakılacak şekilde tasarlanır. Bu doküman onu m
 
 | Kural | Eşik | Aksiyon |
 |---|---|---|
-| LLM aylık maliyet | > $16 (bütçe %80) | Uyarı |
-| LLM aylık maliyet | > $20 | LLM disable + acil uyarı |
-| Frigate kamera offline | > 5 dk | Uyarı |
+| LLM aylık maliyet | > $24 (bütçe %80) | Uyarı |
+| LLM aylık maliyet | > $30 | LLM disable + acil uyarı |
+| **Kamera offline** | > 60 sn frame yok | **Uyarı + e-posta** |
+| Kamera offline (kritik kapı/oda) | > 60 sn | **Acil + telefon push** |
+| **NVR CPU** | > %70 | Uyarı |
+| **NVR CPU** | > %80 | Acil + Grup C otomatik kapat |
 | Postgres bağlantı kopuk | herhangi | Acil |
 | Disk doluluk | > %80 | Uyarı |
 | Disk doluluk | > %95 | Acil + auto-cleanup |
 | Bridge container restart | > 3/saat | Uyarı |
 | Dahua alarm fail | > %20 | Uyarı |
+| SMTP fail | > 5 ardışık | Uyarı (e-posta gitmiyor) |
+
+### Kamera Offline Detayı
+
+Frigate her kamera için `frigate/<cam>/available` MQTT topic'inde durumu yayar. Bridge bunu dinler:
+
+- `available=False` → bridge başlangıçta 30 sn bekler (ağ glitchi olabilir)
+- 60 sn devam ederse → DB'ye `camera_offline` event yazılır
+- Kritik kameralar (kapı, kasa, ana giriş) için → derhal e-posta gönderilir
+- Online'a dönünce → "Kamera tekrar online" log + opsiyonel e-posta
+
+Konfigürasyonda kritik kameralar belirtilir:
+
+```yaml
+# bridge/config/cameras.yaml
+cameras:
+  ana_kapi:
+    critical: true
+    offline_alert_email: ["guvenlik@example.com", "mudur@example.com"]
+  depo_giris:
+    critical: true
+  arka_park:
+    critical: false   # sadece log
+```
 
 ## Backup
 

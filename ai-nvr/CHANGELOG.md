@@ -22,6 +22,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) tarzı.
 - `02-hardware.md`: Coral kapasite tablosu eklendi
 - `04-zone-rules.md`: oda + kapı kuralları ayrıştırıldı
 - `07-cost-analysis.md`: Grup C maliyet detayı + duyarlılık tablosu
+- **NVR bağlantı stratejisi**: direct vs NVR-channel kıyaslama + yük hesabı
+- **NVR yük izleme**: CPU eşikleri (%70 uyarı, %80 Grup C kapatma)
+- **NVR orijinal panel davranışı**: External Alarm + DSS Pro Custom Event seçenekleri
+- **Kamera offline alarm**: 60 sn frame yok → uyarı; kritik kameralar için anlık e-posta
+- `10-why-frigate.md` eklendi: saf Haiku neden yapılmaz teknik gerekçeler
 
 ### Notes
 - Henüz çalışan kod yok, sadece tasarım dokümanları.
