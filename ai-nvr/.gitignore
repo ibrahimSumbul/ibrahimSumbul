@@ -1,0 +1,56 @@
+# Environment
+.env
+.env.local
+.env.*.local
+*.secret
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Docker / Frigate runtime data
+frigate/media/
+frigate/db/
+frigate/clips/
+frigate/recordings/
+frigate/exports/
+postgres/data/
+mosquitto/data/
+mosquitto/log/
+grafana/data/
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Model artifacts (büyük binary)
+*.tflite
+*.onnx
+*.pt
+*.weights
+models/
+
+# Snapshot debug çıktıları
+debug_snapshots/
+
+# Local override
+docker-compose.override.yml
