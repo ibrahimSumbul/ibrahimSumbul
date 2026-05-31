@@ -104,7 +104,7 @@ Production-grade reference architecture for adding AI on top of an **existing 10
 - ✅ Local Ollama vision (Qwen2.5-VL) for truck cab + trailer color analysis
 - ✅ Dahua NVR external alarm bridge with retry queue (DSS/SmartPSS panel + mobile push)
 - 🚧 M5: 5 cameras live + Grafana dashboard; production target 10 cameras
-- ⬜ M6: Coral USB upgrade (hardware sourcing) · M6.5: door events + email
+- ⬜ M6: Coral USB upgrade (hardware sourcing) · M6.5: door events + DMSS mobile push
 - 60 unit tests · ruff · mypy strict · Alembic migrations · GitHub Actions CI
 - 11 architecture documents — tech decisions to bottleneck analysis
 
