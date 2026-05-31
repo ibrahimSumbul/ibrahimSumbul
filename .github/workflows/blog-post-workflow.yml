@@ -1,0 +1,26 @@
+name: Latest blog post workflow
+
+on:
+  schedule:
+    - cron: "0 6 * * *"  # daily at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-readme-with-blog:
+    name: Update README with latest posts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pull in posts
+        uses: gautamkrishnar/blog-post-workflow@v1
+        with:
+          # Add your blog RSS feed URLs here when you start publishing.
+          # Examples (uncomment + replace when ready):
+          #   "https://medium.com/feed/@ibrahimsumbul"
+          #   "https://dev.to/feed/ibrahimsumbul"
+          #   "https://yourblog.com/rss.xml"
+          feed_list: ""
+          max_post_count: 5
+          template: "- [$title]($url) — $description"
