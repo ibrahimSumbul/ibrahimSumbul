@@ -24,7 +24,7 @@
   <a href="#-about">About</a> ·
   <a href="#-tech-stack">Tech Stack</a> ·
   <a href="#-featured-projects">Projects</a> ·
-  <a href="#-past-projects">Past Work</a> ·
+  <a href="#-cross-platform-track-record">Track Record</a> ·
   <a href="#-certifications">Certifications</a> ·
   <a href="#%EF%B8%8F-writing">Writing</a> ·
   <a href="#-stats">Stats</a> ·
@@ -114,16 +114,28 @@ Production-grade reference architecture for adding AI on top of an **existing 10
 
 ---
 
-### 📂 Past Projects
+### 🧭 Cross-Platform Track Record
 
-#### 🏋️ AI Fitness Coaching App *(side project — shipped)*
-Mobile fitness app pairing a **trainer** with their athletes; LLM acts as explainer-in-the-middle. Instagram OAuth, training plan analysis, weekly check-ins, jargon translation for non-expert users. **React Native · Instagram OAuth · LLM.** Design problem: AI that **augments** human expertise instead of replacing it.
+> Same instinct, different surfaces — AI living where it's actually used. Three earlier projects show the integration reach behind today's edge + orchestration work.
 
-#### 🚗 [AI-Powered Vehicle System Automation](https://github.com/ibrahimSumbul/ai-vehicle-automation)
-AI-driven automotive assistant automating diagnostic and reporting workflows — GPT-based reasoning over IoT data, vehicle fault detection, automatic logging.
+#### 🏋️ AI Fitness Coaching App — *Mobile · React Native*
+LLM as explainer-in-the-middle between trainer and athlete. Instagram OAuth, training plan analysis, weekly check-ins, jargon translation for non-expert users.
+**Integration angle:** mobile-first LLM that **augments** human expertise instead of replacing it — two-sided assistance pattern (trainer + athlete from a single AI surface).
 
-#### ⚖️ [seesaw_tork](https://github.com/ibrahimSumbul/seesaw_tork)
-Tork-based seesaw physics simulation — JavaScript exploration of rigid-body dynamics. Earlier hobby project.
+#### 🚗 [AI-Powered Vehicle System Automation](https://github.com/ibrahimSumbul/ai-vehicle-automation) — *IoT · Edge*
+GPT-based reasoning over fleet telemetry. Vehicle fault detection, diagnostic workflow automation, automatic logging.
+**Integration angle:** event-driven AI on IoT data streams — early version of the same reflex that drives AI NVR today (edge sensors → cloud reasoning → actionable signal).
+
+#### ⚖️ [seesaw_tork](https://github.com/ibrahimSumbul/seesaw_tork) — *Web · JavaScript*
+Torque-based seesaw physics simulation — rigid-body dynamics exploration.
+**Integration angle:** the engineering muscle (state machines, physics, time-based simulation) behind today's edge inference + zone state work in AI NVR.
+
+---
+
+**Stack reach demonstrated:**
+📱 Mobile (React Native + LLM) · 🚗 IoT/Edge (GPT + telemetry) · 🌐 Web (JS + physics) · 🧩 Backend orchestration (TypeScript + Next.js + Anthropic) · 📹 Vision/Edge AI (Python + Frigate + Ollama)
+
+**Same craft:** figure out where AI belongs in the system, then ship it — whether that means a mobile LLM bubble, an IoT event stream, an enterprise dashboard, or a fully local vision pipeline.
 
 ---
 
