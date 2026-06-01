@@ -86,7 +86,9 @@ prompt engineering & versioning · Anthropic prompt caching · structured output
 
 > Framed not as "another chatbot" but as **a data strategy project** — orchestration becomes the forcing function that disciplines underlying data sources and turns latent data into used data.
 
-> *Repository private during development. Architecture deck and engineering deep-dive available on request.*
+> *Implementation repository private during development. Engineering deep-dive available on request.*
+>
+> 📖 **Architecture vision (public, CC BY-SA 4.0):** [`enterprise-ai-orchestra`](https://github.com/ibrahimSumbul/enterprise-ai-orchestra) · [live interactive demo](https://ibrahimsumbul.github.io/enterprise-ai-orchestra/)
 
 ---
 
