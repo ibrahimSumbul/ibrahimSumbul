@@ -126,14 +126,10 @@ LLM as explainer-in-the-middle between trainer and athlete. Instagram OAuth, tra
 GPT-based reasoning over fleet telemetry. Vehicle fault detection, diagnostic workflow automation, automatic logging.
 **Integration angle:** event-driven AI on IoT data streams — early version of the same reflex that drives AI NVR today (edge sensors → cloud reasoning → actionable signal).
 
-#### ⚖️ [seesaw_tork](https://github.com/ibrahimSumbul/seesaw_tork) — *Web · JavaScript*
-Torque-based seesaw physics simulation — rigid-body dynamics exploration.
-**Integration angle:** the engineering muscle (state machines, physics, time-based simulation) behind today's edge inference + zone state work in AI NVR.
-
 ---
 
 **Stack reach demonstrated:**
-📱 Mobile (React Native + LLM) · 🚗 IoT/Edge (GPT + telemetry) · 🌐 Web (JS + physics) · 🧩 Backend orchestration (TypeScript + Next.js + Anthropic) · 📹 Vision/Edge AI (Python + Frigate + Ollama)
+📱 Mobile (React Native + LLM) · 🚗 IoT/Edge (GPT + telemetry) · 🧩 Backend orchestration (TypeScript + Next.js + Anthropic) · 📹 Vision/Edge AI (Python + Frigate + Ollama)
 
 **Same craft:** figure out where AI belongs in the system, then ship it — whether that means a mobile LLM bubble, an IoT event stream, an enterprise dashboard, or a fully local vision pipeline.
 
