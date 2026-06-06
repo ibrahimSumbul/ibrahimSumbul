@@ -24,7 +24,7 @@
   <a href="#-about">About</a> ·
   <a href="#-tech-stack">Tech Stack</a> ·
   <a href="#-featured-projects">Projects</a> ·
-  <a href="#-cross-platform-track-record">Track Record</a> ·
+  <a href="#-beyond-the-ai-layer">Beyond AI</a> ·
   <a href="#-certifications">Certifications</a> ·
   <a href="#%EF%B8%8F-writing">Writing</a> ·
   <a href="#-stats">Stats</a> ·
@@ -94,44 +94,30 @@ prompt engineering & versioning · Anthropic prompt caching · structured output
 
 #### 🎥 [AI NVR — Hybrid Camera Analytics](https://github.com/ibrahimSumbul/ai_nvr)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/LICENSE)
-[![Phase](https://img.shields.io/badge/Phase-M4%20done%20·%20M5%20in%20flight-green)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/ROADMAP.md)
+[![Phase](https://img.shields.io/badge/Phase-M6.5%20done%20·%20M7%20in%20flight-green)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/ROADMAP.md)
 [![Stack](https://img.shields.io/badge/Python%20·%20Frigate%20·%20Postgres%20·%20Ollama%20·%20Grafana-534AB7)](https://github.com/ibrahimSumbul/ai_nvr)
-[![Tests](https://img.shields.io/badge/60%20unit%20·%20ruff%20·%20mypy%20strict-success)](https://github.com/ibrahimSumbul/ai_nvr/tree/main/bridge/tests)
+[![Tests](https://img.shields.io/badge/86%20unit%20·%20ruff%20·%20mypy%20strict-success)](https://github.com/ibrahimSumbul/ai_nvr/tree/main/bridge/tests)
 
 Production-grade reference architecture for adding AI on top of an **existing 100-camera Dahua NVR** without disturbing the original recording system. Combines **local detection** (Frigate + optional Coral USB) with **fully local vision LLM** (Ollama + Qwen2.5-VL) for color recognition — **images never leave the facility, $0 monthly LLM cost**.
 
-**Current status (M4 done · M5 in flight):**
+**Current status (M6.5 done · M7 in flight):**
 - ✅ Core pipeline running — 5 services healthy, end-to-end verified
-- ✅ Zone state machine, first-entry alarm, snapshot capture
-- ✅ Local Ollama vision (Qwen2.5-VL) for truck cab + trailer color analysis
+- ✅ Zone state machine, first-entry + restricted-zone alarm, snapshot capture
+- ✅ Local Ollama vision (Qwen2.5-VL) — truck cab + trailer color/type, per-call latency logged
 - ✅ Dahua NVR external alarm bridge with retry queue (DSS/SmartPSS panel + mobile push)
-- 🚧 M5: 5 cameras live + Grafana dashboard; production target 10 cameras
-- ⬜ M6: Coral USB upgrade (hardware sourcing) · M6.5: door events + DMSS mobile push
-- 60 unit tests · ruff · mypy strict · Alembic migrations · GitHub Actions CI
+- ✅ Door events — ms-precision in/out log + DMSS mobile push
+- ✅ Camera-offline detection → alarm + Grafana panel · operational runbook
+- 🚧 M7: operational maturity — backup/disk alarms; production target 10 cameras (Coral USB sourcing at M6)
+- 86 unit tests · ruff · mypy strict · Alembic migrations · GitHub Actions CI
 - 11 architecture documents — tech decisions to bottleneck analysis
 
 > **Why interesting:** real cost math (pure cloud LLM ≈ $2.5M/mo vs hybrid Anthropic ≈ $25/mo vs **fully-local Ollama ≈ $0/mo**), explicit trade-off tables, NVR-load-aware design, privacy-first architecture — no images cross network boundary.
 
 ---
 
-### 🧭 Cross-Platform Track Record
+### 🧩 Beyond the AI Layer
 
-> Same instinct, different surfaces — AI living where it's actually used. Three earlier projects show the integration reach behind today's edge + orchestration work.
-
-#### 🏋️ AI Fitness Coaching App — *Mobile · React Native*
-LLM as explainer-in-the-middle between trainer and athlete. Instagram OAuth, training plan analysis, weekly check-ins, jargon translation for non-expert users.
-**Integration angle:** mobile-first LLM that **augments** human expertise instead of replacing it — two-sided assistance pattern (trainer + athlete from a single AI surface).
-
-#### 🚗 [AI-Powered Vehicle System Automation](https://github.com/ibrahimSumbul/ai-vehicle-automation) — *IoT · Edge*
-GPT-based reasoning over fleet telemetry. Vehicle fault detection, diagnostic workflow automation, automatic logging.
-**Integration angle:** event-driven AI on IoT data streams — early version of the same reflex that drives AI NVR today (edge sensors → cloud reasoning → actionable signal).
-
----
-
-**Stack reach demonstrated:**
-📱 Mobile (React Native + LLM) · 🚗 IoT/Edge (GPT + telemetry) · 🧩 Backend orchestration (TypeScript + Next.js + Anthropic) · 📹 Vision/Edge AI (Python + Frigate + Ollama)
-
-**Same craft:** figure out where AI belongs in the system, then ship it — whether that means a mobile LLM bubble, an IoT event stream, an enterprise dashboard, or a fully local vision pipeline.
+Not just the model — I build and ship across the **full stack**: TypeScript · Next.js · Node backends, **React Native** mobile apps, and Postgres / Supabase data layers. The AI systems above sit on a real product-engineering foundation, not a notebook.
 
 ---
 
@@ -181,7 +167,7 @@ GPT-based reasoning over fleet telemetry. Vehicle fault detection, diagnostic wo
 ### 🌱 Currently Working On
 
 - Lead engineer on the **AI Orchestration Platform** above — moving from architecture deck to multi-agent runtime: prompt versioning, eval pipelines (Promptfoo + Vitest golden queries), Anthropic prompt caching strategy, KVKK PII pipeline, per-agent cost attribution.
-- **AI NVR M5 in flight** — production deployment to 10 cameras, Grafana dashboard polish, Coral USB hardware sourcing for M6.
+- **AI NVR M7 in flight** — operational maturity: camera-offline detection, backup/disk alarms, runbook; production deployment to 10 cameras (Coral USB sourcing at M6).
 - Exploring **capability-based model routing** (Sonnet for reasoning, Haiku for retrieval/data, local Qwen2.5-VL for vision) to keep multi-agent systems under tight monthly LLM budgets.
 
 ---
