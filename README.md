@@ -6,7 +6,7 @@
 <p align="center">
   <b>🤖 AI Systems Engineer · Hybrid AI architectures</b><br>
   <b>🇹🇷 KVKK / GDPR-aware enterprise AI · Türkiye → EMEA</b><br>
-  <b>🔧 Edge inference (Frigate · Coral · Ollama) ↔ Multi-agent orchestration (Claude)</b>
+  <b>🔧 Edge inference · local vision analysis ↔ multi-agent orchestration</b>
 </p>
 
 <p align="center">
@@ -59,7 +59,7 @@ Currently exploring how **hybrid AI** — local detection + cloud LLM semantics,
 <p align="left">
   <img src="https://skillicons.dev/icons?i=python,pytorch,tensorflow" />
   <br>
-  <b>Focus areas:</b> Hybrid AI architecture · Multi-agent orchestration · Vision LLMs (Claude, Gemini, GPT-4o, Qwen2.5-VL local) · Prompt engineering & caching · Local inference (Frigate, YOLO, Coral TPU, Ollama) · Event-driven systems · KVKK / GDPR-aware design
+  <b>Focus areas:</b> Hybrid AI architecture · Multi-agent orchestration · Vision LLMs · Prompt engineering & caching · Local inference · Event-driven systems · KVKK / GDPR-aware design
 </p>
 
 ---
@@ -77,7 +77,7 @@ Multi-agent orchestration layer that gives users a single natural-language surfa
 - Four-layer separation: Channels · Orchestration · Domain agents · Federated data sources (no central warehouse, query-time API access)
 - **Capability-based model routing** — domain reasoning on Claude Sonnet, horizontal/data tasks on Haiku, with fallback chains
 - Multi-channel context continuity (a chat thread started in Teams continues in the web dashboard)
-- KVKK / GDPR-grade audit trail, prompt-injection defense, tool whitelisting per domain
+- KVKK / GDPR-aware auditability, prompt-injection defense, tool whitelisting per domain
 
 **Engineering rigor — every agent ships with a 12-axis checklist:**
 prompt engineering & versioning · Anthropic prompt caching · structured outputs (Zod) · typed error taxonomy · streaming with progressive tool-call UI · OpenTelemetry observability · per-user / per-agent / per-tool rate limits (Upstash Redis) · PII detect+mask pipeline (TC kimlik, phone — deterministic + Haiku) · golden-query evals (Vitest + Promptfoo) · semver agent versioning · per-call cost log + Vercel AI Gateway budget caps · LLM hallucination guard via citation cross-check.
@@ -94,24 +94,25 @@ prompt engineering & versioning · Anthropic prompt caching · structured output
 
 #### 🎥 [AI NVR — Hybrid Camera Analytics](https://github.com/ibrahimSumbul/ai_nvr)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/LICENSE)
-[![Phase](https://img.shields.io/badge/Phase-M6.5%20done%20·%20M7%20in%20flight-green)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/ROADMAP.md)
-[![Stack](https://img.shields.io/badge/Python%20·%20Frigate%20·%20Postgres%20·%20Ollama%20·%20Grafana-534AB7)](https://github.com/ibrahimSumbul/ai_nvr)
-[![Tests](https://img.shields.io/badge/86%20unit%20·%20ruff%20·%20mypy%20strict-success)](https://github.com/ibrahimSumbul/ai_nvr/tree/main/bridge/tests)
+[![Phase](https://img.shields.io/badge/Phase-M7%20in%20flight%20·%20M8%20design-green)](https://github.com/ibrahimSumbul/ai_nvr/blob/main/ROADMAP.md)
+[![Stack](https://img.shields.io/badge/Python%20·%20Frigate%20·%20Postgres%20·%20Local%20Vision%20·%20Grafana-534AB7)](https://github.com/ibrahimSumbul/ai_nvr)
+[![Tests](https://img.shields.io/badge/140%20unit%20·%20ruff%20·%20mypy%20strict-success)](https://github.com/ibrahimSumbul/ai_nvr/tree/main/bridge/tests)
 
-Production-grade reference architecture for adding AI on top of an **existing 100-camera Dahua NVR** without disturbing the original recording system. Combines **local detection** (Frigate + optional Coral USB) with **fully local vision LLM** (Ollama + Qwen2.5-VL) for color recognition — **images never leave the facility, $0 monthly LLM cost**.
+Production-targeted reference architecture for adding AI on top of an **existing CCTV/NVR environment** without disturbing the original recording system. Combines **local detection** with **local vision analysis** for event enrichment — designed to keep image data on-site by default while preserving flexibility for external LLM/API providers when needed.
 
-**Current status (M6.5 done · M7 in flight):**
-- ✅ Core pipeline running — 5 services healthy, end-to-end verified
+**Current status (M7 in flight · M8 design):**
+- ✅ Core pipeline running in dev-stack — 5 services healthy, end-to-end verified with test streams
 - ✅ Zone state machine, first-entry + restricted-zone alarm, snapshot capture
-- ✅ Local Ollama vision (Qwen2.5-VL) — truck cab + trailer color/type, per-call latency logged
-- ✅ Dahua NVR external alarm bridge with retry queue (DSS/SmartPSS panel + mobile push)
+- ✅ Local vision analysis — truck cab + trailer color/type, per-call latency logged
+- ✅ NVR external-alarm bridge code with retry queue; field validation pending
 - ✅ Door events — ms-precision in/out log + DMSS mobile push
 - ✅ Camera-offline detection → alarm + Grafana panel · operational runbook
-- 🚧 M7: operational maturity — backup/disk alarms; production target 10 cameras (Coral USB sourcing at M6)
-- 86 unit tests · ruff · mypy strict · Alembic migrations · GitHub Actions CI
+- 🚧 M7: operational maturity — backup/disk alarms, restart auto-tests, 6h/24h soak path
+- 🔬 M8: forensic behavior intelligence — design/spec stage, not shipped code
+- 140 unit tests · ruff · mypy strict · Alembic migrations · GitHub Actions CI
 - 11 architecture documents — tech decisions to bottleneck analysis
 
-> **Why interesting:** real cost math (pure cloud LLM ≈ $2.5M/mo vs hybrid Anthropic ≈ $25/mo vs **fully-local Ollama ≈ $0/mo**), explicit trade-off tables, NVR-load-aware design, privacy-first architecture — no images cross network boundary.
+> **Why interesting:** real cost modeling, explicit trade-off tables, NVR-load-aware design, privacy-first architecture, and a clear production-readiness path from unit tests to soak tests and field pilot.
 
 ---
 
@@ -140,9 +141,9 @@ Not just the model — I build and ship across the **full stack**: TypeScript ·
 <!-- BLOG-POST-LIST:END -->
 
 **Planned topics:**
-- *Local-First Vision LLMs: Real Cost Math from a 100-Camera Production Deployment*
+- *Local-First Vision LLMs: Real Cost Math from Production-Targeted Camera Validation*
 - *Hybrid AI Decision Matrix: When Edge, When Cloud, When Both*
-- *KVKK-Compliant Multi-Agent Architecture: A Practical Reference*
+- *KVKK/GDPR-aware Multi-Agent Architecture: A Practical Reference*
 - *Boundary Agent Doctrine: A Framework for AI Tool Calling at Production Scale*
 
 ---
@@ -167,8 +168,8 @@ Not just the model — I build and ship across the **full stack**: TypeScript ·
 ### 🌱 Currently Working On
 
 - Lead engineer on the **AI Orchestration Platform** above — moving from architecture deck to multi-agent runtime: prompt versioning, eval pipelines (Promptfoo + Vitest golden queries), Anthropic prompt caching strategy, KVKK PII pipeline, per-agent cost attribution.
-- **AI NVR M7 in flight** — operational maturity: camera-offline detection, backup/disk alarms, runbook; production deployment to 10 cameras (Coral USB sourcing at M6).
-- Exploring **capability-based model routing** (Sonnet for reasoning, Haiku for retrieval/data, local Qwen2.5-VL for vision) to keep multi-agent systems under tight monthly LLM budgets.
+- **AI NVR M7 in flight** — operational maturity: camera-offline detection, backup/disk alarms, runbook, soak-test path, and field-pilot readiness.
+- Exploring **capability-based model routing** to keep multi-agent systems reliable, auditable, and cost-aware under tight monthly LLM budgets.
 
 ---
 
