@@ -5,7 +5,7 @@
 
 <p align="center">
   <b>🤖 AI Systems Engineer · Hybrid AI architectures</b><br>
-  <b>🇹🇷 KVKK / GDPR-aware enterprise AI · Türkiye → EMEA</b><br>
+  <b>🇹🇷 KVKK / GDPR-aware enterprise AI · Antalya, Türkiye → EMEA</b><br>
   <b>🔧 Edge inference · local vision analysis ↔ multi-agent orchestration</b>
 </p>
 
